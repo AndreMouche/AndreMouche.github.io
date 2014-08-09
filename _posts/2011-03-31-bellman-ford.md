@@ -1,13 +1,13 @@
 ---
 layout: postlayout
-title: Hello GitHub!
+title: POJ 3259 Wormholes【Bellman-Ford】
 thumbimg: 1346208288725.jpg
-categories: [life]
+categories: [acm]
 tags: [acm, graph, algorithm]
 ---
 
-http://poj.org/problem?id=3259
-POJ 3259 Wormholes
+
+[POJ 3259 Wormholes](http://poj.org/problem?id=3259)
 大意：给出由n个顶点组成的有向图所有边信息，判断该图中是否存在负回路
 分析：
   由于不知道图中的负环路会包含哪些顶点，故自定义一源点s,对于每个顶点k,
