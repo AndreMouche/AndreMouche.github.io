@@ -114,7 +114,7 @@ a:hover, a:active { outline: none; }
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
-  background: #e6e6e6 url(../img/bgs/bg_main.png) repeat-y 263px 0;
+  //background: #e6e6e6 url(../img/bgs/bg_main.png) repeat-y 263px 0;
 }
 
 #sidebar {
