@@ -27,19 +27,20 @@ tags: ["字典序", "ACM"]
 输出共有k行，每行对应于一个字符串的编码。
 
 ##Sample Input
-
+```
 2
 a
 b
+```
 
 ##Sample Output
-
+```
 1
 2
+```
 
 ##Answer
 ```
-代码
 
 #include<stdio.h>     
 #include<string.h>     
