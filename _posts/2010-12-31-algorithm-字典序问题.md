@@ -4,7 +4,7 @@ title: "字典序问题"
 keywords: ["algorithm", "算法设计与分析"]
 description: "字典序问题解题报告"
 category: "algorithm"
-tags: ["字典序", "ACM"]
+tags: ["ACM"]
 
 ---
 
