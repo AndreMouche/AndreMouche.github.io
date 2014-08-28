@@ -1,14 +1,13 @@
 ---
 layout: post
-title: "背包 POJ 3211 Washing Clothes"
+title: "POJ 3211 Washing Clothes [背包]"
 keywords: ["algorithm", "背包","POJ"]
-description: "背包 POJ 3211 Washing Clothes解题报告"
+description: "POJ 3211 Washing Clothes [背包]解题报告"
 category: "algorithm"
 tags: ["ACM","背包","DP"]
 
 ---
 
-#背包 POJ 3211 Washing Clothes
 [POJ 3211 Washing Clothes](http://poj.org/problem?id=3211)
 
 ##核心算法：
