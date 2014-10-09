@@ -8,7 +8,7 @@ tags: ["GraphicsMagick"]
 
 ---
 
-#使用GraphicsMagick提取图片基本信息
+##使用GraphicsMagick提取图片基本信息
 
 通过使用[PingImage](http://www.graphicsmagick.org/api/constitute.html#pingimage)获取图片基本属性。
 
