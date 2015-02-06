@@ -58,5 +58,17 @@ golang在调用http.Client.Do函数时，会按以下步骤执行：
 2.“EOF” 是服务端接收了连接，并主动关闭连接，抓包过程中可以看到完整的四次握手，断开连接过程
 <img src="../images/2015-02-06-golang-http-tips/eof.jpg" width=500/>
 
+####测试代码：
+* [server](https://github.com/AndreMouche/LittleTools/blob/master/golang/httpDemo/server.go)
+* [client](https://github.com/AndreMouche/LittleTools/blob/master/golang/httpDemo/client.go)
+
+####错误重现：
+1. EOF:将client连接数设为1，server的sleep时间加长，请求未完成时，关闭server进程
+2. "connection reset by peer"：将server所在机器的并发量设小：
+    * ulimit -n 64
+    * ulimit -u 64
+    
+     加大client的并发，稍后便出现该错误
+
 
 
