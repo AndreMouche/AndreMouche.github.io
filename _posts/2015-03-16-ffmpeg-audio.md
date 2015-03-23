@@ -49,7 +49,7 @@ tags: ["ffmpeg"]
 
 ##概述
 
-本文将详细介绍编译安装ffmpeg,该ffmpeg将支持目前业界各主流音频格式，详细列表为：mp2，mp3，flac，vorbis，wav，aac，amr，ac3，wma，wmv。
+本文将详细介绍编译安装ffmpeg,该ffmpeg将支持目前业界各主流音频格式，主要功能为支持mp2，mp3，flac，vorbis，wav，aac，amr，ac3，wma，wmv格式转为mp3/aac/amr。
 
 ##依赖库安装
 ###yasm1.3.0
@@ -287,6 +287,31 @@ size=     158kB time=00:00:10.08 bitrate= 128.1kbits/s
 video:0kB audio:158kB subtitle:0 data:0 global headers:0kB muxing overhead 0.049574%
 ```
 
+部分从wav转mp3,遇到一下错误：
+
+```
+Input #0, wav, from '../resource/flac/1.wav':
+  Duration: 00:09:05.67, bitrate: 96 kb/s
+    Stream #0:0: Audio: pcm_u8 ([1][0][0][0] / 0x0001), 12000 Hz, mono, 96 kb/s
+[abuffer @ 0x1a3b520] Unable to parse option value "(null)" as sample format
+    Last message repeated 1 times
+[abuffer @ 0x1a3b520] Error setting option sample_fmt to value (null).
+[graph 0 input from stream 0:0 @ 0x1a4fea0] Error applying options to the filter.
+Error opening filters!
+Conversion failed!
+```
+
+
+解决方法，加上编译参数
+
+```
+   --enable-encoder=pcm_u8 \
+    --enable-decoder=pcm_u8 \
+    --enable-muxer=pcm_u8 \
+    --enable-demuxer=pcm_u8 \
+```
+
+
 ### 支持aac
 **编译**
 
@@ -340,6 +365,8 @@ Press [q] to stop, [?] for help
 size=      11kB time=00:00:10.37 bitrate=   8.3kbits/s    
 video:0kB audio:10kB subtitle:0 data:0 global headers:0kB muxing overhead 2.482877%
 ```
+
+
 
 
 ### 支持mp2
@@ -436,6 +463,51 @@ Press [q] to stop, [?] for help
 size=      10kB time=00:00:10.22 bitrate=   8.3kbits/s    
 video:0kB audio:10kB subtitle:0 data:0 global headers:0kB muxing overhead 2.517361%
 ```
+
+部分flac转mp3失败的原因之一是ffmpeg没有将图片格式编在里面的缘故，
+在ffmpeg编译时添加以下参数
+
+```
+    --enable-encoder=jpeg2000 \
+    --enable-encoder=mjpeg \
+    --enable-encoder=ljpeg \
+    --enable-encoder=jpegls \
+    --enable-decoder=jpeg2000 \
+    --enable-decoder=jpegls \
+    --enable-decoder=mjpeg \
+    --enable-decoder=mjpegb \
+    --enable-muxer=mjpeg \
+    --enable-demuxer=mjpeg \
+    --enable-encoder=png \
+    --enable-decoder=png \
+    --enable-parser=png \
+```
+
+加入图片支持后，以上转码依旧报错
+
+```
+Input #0, flac, from 'b1.flac':
+  Duration: 00:08:32.31, bitrate: 871 kb/s
+    Stream #0:0: Audio: flac, 44100 Hz, stereo, s16
+    Stream #0:1: Video: mjpeg, yuvj420p(pc), 542x475 [SAR 96:96 DAR 542:475], 90k tbr, 90k tbn, 90k tbc
+    Metadata:
+      comment         : Cover (front)
+File 'test.mp3' already exists. Overwrite ? [y/N] y
+'scale' filter not present, cannot convert pixel formats.
+Error opening filters!
+Conversion failed!
+```
+
+解决方法：
+编译时添加scale的支持
+
+```
+   --enable-swscale \
+    --enable-swscale-alpha \
+    --enable-filter=scale \
+```
+
+
 
 ### 支持 ac3
 
@@ -641,6 +713,26 @@ video:0kB audio:10kB subtitle:0 data:0 global headers:0kB muxing overhead 2.5173
     --enable-decoder=wmv3_crystalhd \
     --enable-decoder=wmv3_vdpau \
     --enable-decoder=wmv3image \
+        --enable-encoder=jpeg2000 \
+    --enable-encoder=mjpeg \
+    --enable-encoder=ljpeg \
+    --enable-encoder=jpegls \
+    --enable-decoder=jpeg2000 \
+    --enable-decoder=jpegls \
+    --enable-decoder=mjpeg \
+    --enable-decoder=mjpegb \
+    --enable-muxer=mjpeg \
+    --enable-demuxer=mjpeg \
+    --enable-encoder=png \
+    --enable-decoder=png \
+    --enable-parser=png \
+    --enable-swscale \
+    --enable-swscale-alpha \
+    --enable-filter=scale \
+    --enable-encoder=pcm_u8 \
+    --enable-decoder=pcm_u8 \
+    --enable-muxer=pcm_u8 \
+    --enable-demuxer=pcm_u8 \
     --enable-small \
 
 ```
