@@ -1,14 +1,42 @@
 ---
 layout: post
-title: "使用GraphicsMagick做文字水印"
+title: "基于GraphicsMagick做文字水印"
 keywords: ["GraphicsMagick", "Annotate","CompositeImage"]
 description: "text watermark with graphicsmagick"
 category: "GraphicsMagick"
 tags: ["GraphicsMagick"]
 
 ---
+#基于graphicMagick实现图片文字水印
+<ul>
+<li><a href="#使用graphicmagick实现图片文字水印">使用graphicMagick实现图片文字水印</a><ul>
+<li><a href="#背景及需求">背景及需求</a></li>
+<li><a href="#分析">分析</a><ul>
+<li><a href="#水印位置">水印位置</a></li>
+<li><a href="#水印透明度">水印透明度</a></li>
+</ul>
+</li>
+<li><a href="#实现方案">实现方案</a><ul>
+<li><a href="#step-1-构造水印画布">Step 1. 构造水印画布</a></li>
+<li><a href="#step-2-制作文字图片">Step 2 : 制作文字图片</a></li>
+<li><a href="#step-3裁减获得文字logo">Step 3:裁减获得文字logo</a></li>
+<li><a href="#step-4设置文字logo透明度">Step 4:设置文字logo透明度</a></li>
+<li><a href="#step-5将logo打到原图对应位置">Step 5:将logo打到原图对应位置</a></li>
+</ul>
+</li>
+<li><a href="#完整示例">完整示例</a><ul>
+<li><a href="#代码">代码</a></li>
+<li><a href="#效果">效果</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
-##使用graphicMagick做图片文字水印
+
+
+
+##背景及需求
 使用GraphicMagick给图片打文字水印，
 除文字内容，字体，字体大小等基本属性外，要求可调以下参数：
 1.指定文字GravityType，其中Gravity为以下九宫格：
@@ -37,7 +65,7 @@ SouthWest     |     South      |     SouthEast
 ###水印透明度
 文字水印Annotate无法指定文字透明度
 
-##方案
+##实现方案
 介于以上分析，无法直接使用AnnotateImage来实现，设计方案如下：
 
 ###Step 1. 构造水印画布
@@ -83,7 +111,7 @@ bool constituteNewImage(Image * & img, int nColumns, int nRows)
 }
 ```
 
-### Step2 : 制作文字图片
+### Step 2 : 制作文字图片
 
 使用Annotate函数在textImg图上打上文字，并指定Annotate为Center，即写在正中。
 
@@ -179,7 +207,7 @@ Image * trimImage(Image *& image){
 }
 
 ```
-### Step4:设置文字logo透明度
+### Step 4:设置文字logo透明度
 设置logo图片非透明部分透明度
 
 ```
@@ -214,7 +242,7 @@ MagickPassFail dissolveImage(Image *image,int dissolve){
 }
 
 ```
-Step 5:将logo打到原图对应位置
+###Step 5:将logo打到原图对应位置
  
 根据gravity算出logo图该落的偏移位置x_offset,y_offset,以CompositeImage的方式将logo图片拼接到原图上。
 
@@ -311,9 +339,9 @@ bool compositeImage(Image *image,Image *logo,GravityType gravity,long dx,long dy
 
 ##完整示例
 ###代码
-[water_mark_txt](https://github.com/AndreMouche/GraphicsMagicUsage/blob/master/water_mark_txt.cpp)
+[water_mark_txt](https://github.com/AndreMouche/GraphicsStudy/blob/master/GraphicsMagicUsage/water_mark_txt.cpp)
 
 ###效果
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/water_mark_txt.jpg" alt="water_mark_txt.jpg" title="water_mark_txt.jpg" width="400" />
+<img src="https://github.com/AndreMouche/GraphicsStudy/blob/master/GraphicsMagicUsage/data/water_mark_txt.jpg?raw=true" alt="water_mark_txt.jpg" title="water_mark_txt.jpg" width="400" />
 
