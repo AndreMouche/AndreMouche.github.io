@@ -42,10 +42,10 @@ pointsize|double|渲染文字大小
 geometry|char *|文字编码后所占矩形的大小，sample "+100+100"
 
 ##案例
-代码[annotate.cpp](https://github.com/AndreMouche/GraphicsMagicUsage/blob/master/annotate.cpp)
+代码[annotate.cpp](https://github.com/AndreMouche/GraphicsStudy/blob/master/GraphicsMagicUsage/annotate.cpp)
 效果：
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/annotate.jpg" alt="annotate.jpg" title="annotate.jpg" width="400" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/annotate.jpg" alt="annotate.jpg" title="annotate.jpg" width="400" />
 
 
 

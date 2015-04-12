@@ -20,10 +20,11 @@ tags: ["GraphicsMagick"]
 
    * 编译安装libwebp
    * 编译安装GraphicsMagicks时，指定libwebp安装位置：
-    ```
+  
+  ```
     ./configure  --prefix=/home/wuxuelian/software/graphicsmagick/build CPPFLAGS='-I/home/wuxuelian/software/libwebp/build/include' LDFLAGS='-L/home/wuxuelian/software/libwebp/build/lib' 
 
-    ```
+  ```
     
 确保Configure结果中WEBP那项为YES
 
