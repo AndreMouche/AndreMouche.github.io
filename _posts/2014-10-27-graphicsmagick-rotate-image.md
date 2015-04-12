@@ -27,7 +27,7 @@ Image *RotateImage( const Image *image, const double degrees,
 ##Sample
 
 ### Code:
-[rotate.cpp](https://github.com/AndreMouche/GraphicsMagicUsage/blob/master/rotate.cpp)
+[rotate.cpp](https://github.com/AndreMouche/GraphicsStudy/blob/master/GraphicsMagicUsage/rotate.cpp)
 ###效果
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/rotate.jpg" alt="rotate.jpg" title="rotate.jpg" width="400" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/rotate.jpg" alt="rotate.jpg" title="rotate.jpg" width="400" />
