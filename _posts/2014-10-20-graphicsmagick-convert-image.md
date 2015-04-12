@@ -30,38 +30,38 @@ identify -verbose test.jpg | grep Interlace
 ```
 
 ##渐进显示案例
-[convert.cpp](https://github.com/AndreMouche/GraphicsMagicUsage/blob/master/convert.cpp)
+[convert.cpp](https://github.com/AndreMouche/GraphicsStudy/blob/master/GraphicsMagicUsage/convert.cpp)
 
 ###LineInterlace
 
 ####原图
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/lineinterlace.jpg" alt="lineinterlace.jpg" title="lineinterlace.jpg" width="600" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/lineinterlace.jpg" alt="lineinterlace.jpg" title="lineinterlace.jpg" width="600" />
 
 
 ####显示效果
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/interlace_1.PNG" alt="interlace_1.PNG" title="interlace_1.PNG" width="600" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/interlace_1.PNG" alt="interlace_1.PNG" title="interlace_1.PNG" width="600" />
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/interlace2.PNG" alt="interlace2.PNG" title="interlace2.PNG" width="600" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/interlace2.PNG" alt="interlace2.PNG" title="interlace2.PNG" width="600" />
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/interlace3.PNG" alt="interlace3.PNG" title="interlace3.PNG" width="600" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/interlace3.PNG" alt="interlace3.PNG" title="interlace3.PNG" width="600" />
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/interlace5.PNG" alt="interlace5.PNG" title="interlace5.PNG" width="600" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/interlace5.PNG" alt="interlace5.PNG" title="interlace5.PNG" width="600" />
 
 ###NoneInterlace
 
 ####原图
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/nointerlace.jpg" alt="nointerlace.jpg" title="nointerlace.jpg" width="600" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/nointerlace.jpg" alt="nointerlace.jpg" title="nointerlace.jpg" width="600" />
 
 ####渐进效果
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/nointerlace1.PNG" alt="nointerlace1.PNG" title="nointerlace1.PNG" width="600" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/nointerlace1.PNG" alt="nointerlace1.PNG" title="nointerlace1.PNG" width="600" />
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/nointerlace2.PNG" alt="nointerlace2.PNG" title="nointerlace2.PNG" width="600" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/nointerlace2.PNG" alt="nointerlace2.PNG" title="nointerlace2.PNG" width="600" />
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/nointerlace3.PNG" alt="nointerlace3.PNG" title="nointerlace3.PNG" width="600" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/nointerlace3.PNG" alt="nointerlace3.PNG" title="nointerlace3.PNG" width="600" />
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/nointerlace4.PNG" alt="nointerlace4.PNG" title="nointerlace4.PNG" width="600" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/nointerlace4.PNG" alt="nointerlace4.PNG" title="nointerlace4.PNG" width="600" />
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/nointerlace5.PNG" alt="nointerlace5.PNG" title="nointerlace5.PNG" width="600" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/nointerlace5.PNG" alt="nointerlace5.PNG" title="nointerlace5.PNG" width="600" />
