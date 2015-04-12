@@ -77,9 +77,9 @@ LightenCompositeOp|结果为composite_image比canvas_image亮部分覆盖在canv
 
 加透明度后的水印
 
-<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsMagicUsage/master/data/disslove.jpg" alt="disslove.jpg" title="disslove.jpg" width="400" />
+<img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/disslove.jpg" alt="disslove.jpg" title="disslove.jpg" width="400" />
 
 ###Code 
 
- [composite.cpp](https://github.com/AndreMouche/GraphicsMagicUsage/blob/master/composite.cpp)
+ [composite.cpp](https://github.com/AndreMouche/GraphicsStudy/blob/master/GraphicsMagicUsage/composite.cpp)
  
