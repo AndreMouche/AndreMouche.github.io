@@ -86,7 +86,7 @@ tags: ["nginx"]
 * Nginx基础架构
 * 事件模块
 * HTTP框架的初始化
-* HTTP跨家的执行流程
+* HTTP框架的执行流程
 
 ##深入Nginx下(第四阶段)
 
