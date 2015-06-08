@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Nginx介绍(译文II)"
+title: "Nginx介绍(译文II--Nginx架构综述)"
 keywords: ["nginx"]
 description: "nginx"
 category: "nginx"
@@ -9,7 +9,7 @@ tags: ["nginx"]
 ---
 
 
-##Nginx 介绍（译文II）
+##Nginx 介绍（译文II--Nginx架构综述）
 
 * 原文 [nginx](http://www.aosabook.org/en/nginx.html)
 * 作者 [Andrew Alexeev](http://www.aosabook.org/en/intro2.html#alexeev-andrew)

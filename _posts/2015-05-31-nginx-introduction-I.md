@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Nginx介绍(译文I)"
+title: "Nginx介绍(译文I--为什么高并发很重要)"
 keywords: ["nginx"]
 description: "nginx"
 category: "nginx"
@@ -9,7 +9,7 @@ tags: ["nginx"]
 ---
 
 
-##Nginx 介绍（译文I）
+##Nginx 介绍（译文I--为什么高并发很重要）
 * 原文 [nginx](http://www.aosabook.org/en/nginx.html)
 * 作者 [Andrew Alexeev](http://www.aosabook.org/en/intro2.html#alexeev-andrew)
 
