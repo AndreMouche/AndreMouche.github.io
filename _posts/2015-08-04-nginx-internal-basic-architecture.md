@@ -128,3 +128,40 @@ struct ngx_command_s {
 
 ```
 
+**配置模块的设计**
+
+Nginx的配置模块的类型（ngx_module_s中的type）叫做NGX_CONF_MODULE，它仅有的模块叫做ngx_conf_module,是nginx的最底层模块，它指导着所有模块以配置项为核心来提供功能。因此它是所有模块的基础。配置模块为nginx提供了以下特性：
+
+* 高可配置性
+* 高可扩展性
+* 高可定制性
+* 高可伸缩性
+
+
+**核心模块接口的简单化**
+
+核心模块的类型叫做NGX_CORE_MODULE。目前官方的核心类型模块中共有6个具体模块：
+
+* ngx_core_module
+* ngx_errlog_module
+* ngx_events_module
+* ngx_openssl_module
+* ngx_http_module
+* ngx_mail_module
+
+这些核心模块简化了nginx的设计，使得非模块化的框架代码只关注于如何调用6个核心模块
+
+核心模块的接口定义如下：
+
+```
+ typedef struct {
+     //核心模块名称
+     ngx_str_t             name;
+     //解析配置项前，Nginx框架会调用create_conf方法
+     void               *(*create_conf)(ngx_cycle_t *cycle);
+     //解析配置项后，Nginx框架会调用init_conf方法
+     char               *(*init_conf)(ngx_cycle_t *cycle, void *conf);
+ } ngx_core_module_t;
+```
+
+<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/nginx/ngx_module_t.jpg?raw=true" alt="ngx_module_t.jpg" title="ngx_module_t.jpg" width="600" />
