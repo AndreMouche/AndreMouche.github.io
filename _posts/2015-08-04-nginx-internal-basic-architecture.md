@@ -14,7 +14,51 @@ tags: ["nginx"]
 
 * 参考材料：《深入理解nginx模块开发与架构设计》 第三部分，深入Nginx-nginx基础架构
 
+#目录
+ <div id="wmd-preview-section-24" class="wmd-preview-section preview-content">
 
+</div><div id="wmd-preview-section-11400" class="wmd-preview-section preview-content">
+
+<div><div class="toc"><div class="toc">
+<ul>
+<li><a href="#源码目录结构">源码目录结构 </a></li>
+<li><a href="#nginx的架构设计">Nginx的架构设计</a><ul>
+<li><a href="#优秀的模块化设计">优秀的模块化设计</a></li>
+<li><a href="#事件驱动架构">事件驱动架构</a></li>
+<li><a href="#请求的多阶段异步处理">请求的多阶段异步处理</a></li>
+<li><a href="#管理进程、多工作进程的设计">管理进程、多工作进程的设计</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div></div>
+
+
+## 源码目录结构 
+```
+.
+├── auto            自动检测系统环境以及编译相关的脚本
+│   ├── cc          关于编译器相关的编译选项的检测脚本
+│   ├── lib         nginx编译所需要的一些库的检测脚本
+│   ├── os          与平台相关的一些系统参数与系统调用相关的检测
+│   └── types       与数据类型相关的一些辅助脚本
+├── conf            存放默认配置文件，在make install后，会拷贝到安装目录中去
+├── contrib         存放一些实用工具，如geo配置生成工具（geo2nginx.pl）
+├── html            存放默认的网页文件，在make install后，会拷贝到安装目录中去
+├── man             nginx的man手册
+└── src             存放nginx的源代码
+    ├── core        nginx的核心源代码，包括常用数据结构的定义，以及nginx初始化运行的核心代码如main函数
+    ├── event       对系统事件处理机制的封装，以及定时器的实现相关代码
+    │   └── modules 不同事件处理方式的模块化，如select、poll、epoll、kqueue等
+    ├── http        nginx作为http服务器相关的代码
+    │   └── modules 包含http的各种功能模块
+    ├── mail        nginx作为邮件代理服务器相关的代码
+    ├── misc        一些辅助代码，测试c++头的兼容性，以及对google_perftools的支持
+    └── os          主要是对各种不同体系统结构所提供的系统函数的封装，对外提供统一的系统调用接口
+```
 
 ## Nginx的架构设计
 
@@ -164,4 +208,105 @@ Nginx的配置模块的类型（ngx_module_s中的type）叫做NGX_CONF_MODULE�
  } ngx_core_module_t;
 ```
 
+ngx_module_t接口及其对核心、事件、HTTP、mail等四类模块ctx上下文成员的具体化结构如下：
 <img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/nginx/ngx_module_t.jpg?raw=true" alt="ngx_module_t.jpg" title="ngx_module_t.jpg" width="600" />
+
+**多层次、多类别的模块设计**
+
+所有的模块间时分层次、分类别的，官方Nginx共有五大类型的模块：
+
+* 核心模块
+* 配置模块
+* 事件模块
+* HTTP模块
+* mail模块
+
+详细层次结构如下图
+
+<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/nginx/nginx_core_module.jpg?raw=true" alt="ngx_module_t.jpg" title="ngx_module_t.jpg" width="600" />
+
+其中
+
+* 配置和核心模块是由Nginx的框架代码定义的，是其它所有模块的基础。
+* 配置模块是所有模块的基础，它实现了最基本的配置项解析功能。
+* Nginx框架会调用核心模块，但是其它三种模块都不会与框架产生关系
+* 事件、HTTP、mail这三种模块的共性是：他们在核心模块中拥有自己的代言人，并在同类模块中有一个作为核心业务与管理功能的模块
+* 事件模块由ngx_event_module定义，但所有事件模块的加载则由ngx_event_core_module负责
+* http模块由ngx_http_module定义，并由它负责加载所有的http模块，而ngx_http_core_module则负责业务的核心逻辑、决定处理具体的请求的具体http模块。mail模块与http类似
+* 事件模块是http模块和mail模块的基础
+
+
+###事件驱动架构
+事件驱动架构，即由一些事件发生源来产生事件，由一个或多个事件收集器来收集、分发事件，然后许多事件处理器会注册自己感兴趣的事件，同时会消费这个事件。
+
+**传统Web服务器处理事件的简单模型**
+
+<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/nginx/traditional_web_event_ar.jpg?raw=true" alt="ngx_module_t.jpg" title="traditional_web_event_ar.jpg" width="600" />
+
+**Nginx处理事件的简单模型**
+
+<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/nginx/nginx_process_events_ar.jpg?raw=true" alt="nginx_process_events_ar.jpg" title="nginx_process_events_ar.jpg" width="600" />
+
+传统的Web服务器是每个事件消费独占一个进程资源，Nginx的事件消费者只是被事件分发者进程短期调用而已。
+其中nginx的这种设计优劣如下：
+
+**优点**
+
+* 使得网络的性能、用户感知的请求时延（延时性）都得到了提升
+* 每个用户的请求所产生的事件会及时响应
+* 整个服务器的网络吞吐量会由于事件的及时响应而增大
+
+**缺点**
+
+* 每个事件消费者都不能有阻塞行为，否则将会由于长时间占用事件分发者进程而导致其它事件得不到及时响应
+* 每个消费者不能让进程变为休眠或等待状态，如在等待一个信号量条件的满足时会使进程进入休眠状态
+* 加大了消费事件程序的开发难度
+
+###请求的多阶段异步处理
+
+请求的多阶段异步处理，即把一个请求的处理过程按照事件的触发方式划分为多个阶段，每个阶段都可以由事件收集、分发器来触发。
+
+另：请求的多阶段异步处理职能基于事件驱动架构实现。
+
+示例：
+
+**处理获取静态文件的HTTP请求时切分的阶段及各阶段的触发事件**
+
+|阶段意义|触发事件|
+|:--|:--|
+|建立TCP连接|接收到TCP中的SYNC包|
+|开始接收用户请求|接收到TCP中的ACK包表示建立连接成功|
+|接收到用户请求并分析已接收的请求是否完整|接收到用户的数据包|
+|接收到完整的用户请求后开始处理用户请求|接收到用户的数据包|
+|由目标静态文件中读取部分内容（避免长期阻塞事件分发者进程）并直接发送给用户|接收到用户的数据包；或者接收到TCP的ACK包表示用户已接收到上次发送的数据包，TCP滑动窗口向前滑动|
+|对于非Keep-alive请求，发送完静态文件后主动关闭连接|接收到TCP中的ACK包表示拥护已接收到之前发送的所有数据包|
+|由于用户关闭连接而结束请求|接收到TCP中的FIN包|
+
+这七个阶段是可以重复发生的，即当一个下载静态资源请求可能会由于请求数据过大、网速不稳定等因素而被划分为成百上千个上述阶段。
+
+**多阶段异步处理的优势如下**
+
+* 配合事件驱动的架构，将会极大地提高网络性能
+* 使得每个进程都能全力运转，不会或者尽量少地出现进程休眠状况。
+* ...
+
+
+**划分请求阶段的原则**
+
+一般是找到请求处理流程中的阻塞方法（或者造成阻塞的代码段），在阻塞代码段上按照下面4种方式来划分阶段
+
+1. 将阻塞进程的方法按照相关的触发事件分为两个阶段：如send调用发送数据给用户时，分为两个阶段：发送且不等待结果阶段、send结果返回阶段
+2. 将阻塞方法调用按照时间分解为多个阶段的方法调用：如读取10MB的文件，分为1000次，每次读取10KB
+3. 在"无所事事" 且必须等待的系统的响应，从而导致系统空转时，使用定时器划分阶段。如那些循环检查标志位。。
+4. 如果某个阻塞方法完全无法划分，则必须使用独立的进程执行这个阻塞方法
+
+
+###管理进程、多工作进程的设计
+
+Nginx采用一个master,多个worker工作进程的设计方式，优点如下：
+
+* 利用多核系统的并发处理能力
+* 负载均衡
+* 管理进程会负责监控工作进程的状态，并负责管理其行为
+
+
