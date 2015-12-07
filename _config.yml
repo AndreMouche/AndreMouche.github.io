@@ -112,9 +112,9 @@ JB :
   analytics :
     provider : baidu
     baidu :
-      tracking_id : 'a7c01c4b55f06cf1df9cabb9b18a65a3' 
+      tracking_id : '1ee3d056dc9bae5e83d8ea50d833f8cd' 
     google : 
-      tracking_id : 'UA-41189818-1'
+      tracking_id : 'UA-71094854-1'
     getclicky :
       site_id : 
     mixpanel :
