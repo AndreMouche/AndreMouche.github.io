@@ -2,19 +2,20 @@
 layout: post
 title: "Nginx学习笔记(Nginx基础架构)"
 keywords: ["nginx"]
-description: "nginx basic architecture"
-category: "nginx"
-tags: ["nginx"]
-
+subtitle:   "Nginx学习笔记(Nginx基础架构)"
+date:       2015-06-15
+author:     "Hux"
+header-img: "img/post-bg-alitrip.jpg"
+tags:
+    - Nginx
 ---
 
-
-##深入Nginx--Nginx基础架构
+## 深入Nginx--Nginx基础架构
 
 
 * 参考材料：《深入理解nginx模块开发与架构设计》 第三部分，深入Nginx-nginx基础架构
 
-#目录
+# 目录
  <div id="wmd-preview-section-24" class="wmd-preview-section preview-content">
 
 </div><div id="wmd-preview-section-11400" class="wmd-preview-section preview-content">
@@ -37,7 +38,9 @@ tags: ["nginx"]
 </div></div>
 
 
-## 源码目录结构 
+# 源码目录结构 
+
+
 ```
 .
 ├── auto            自动检测系统环境以及编译相关的脚本
@@ -59,6 +62,8 @@ tags: ["nginx"]
     ├── misc        一些辅助代码，测试c++头的兼容性，以及对google_perftools的支持
     └── os          主要是对各种不同体系统结构所提供的系统函数的封装，对外提供统一的系统调用接口
 ```
+
+
 
 ## Nginx的架构设计
 
