@@ -1,87 +1,89 @@
 ---
 layout: default
-title: "AndreMouche's blog"
-tagline: "Free as the wind."
-description: "一个码农的技术博客，分享折腾的点点滴滴"
 ---
-{% include JB/setup %}
+<div class="home">
 
-<!-- Recent Posts  -->
-<section>
-  {% for post in paginator.posts %}
-  <article class="nested">
-
-    <header>
-      <h2><a href="{{ post.url }}" title="查看《{{ post.title }}》">{{ post.title }}</a></h2>
+<div class="site-header-container {% if site.cover %}has-cover{% endif %}" {% if site.cover %}style="background-image: url({{ site.cover | prepend: site.baseurl }});"{% endif %}>
+  <div class="scrim {% if site.cover %}has-cover{% endif %}">
+    <header class="site-header">
+      <h1 class="title">{{ site.title }}</h1>
+      {% if site.subtitle %}<p class="subtitle">{{ site.subtitle }}</p>{% endif %}
     </header>
+  </div>
+</div>
 
-    <section>
-      <p>
-        {{ post.content | strip_html | truncate:300 }}
-      </p>
-      <a class="button-link" href="{{ post.url }}" title="查看全文">read more</a>
+<div class="wrapper">
+<ul class="post-list">
+  {% for post in paginator.posts %}
+  <li>
+    <h2>
+      <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+    </h2>
+    <section class="post-excerpt" itemprop="description">
+      <p>{{ post.content | strip_html | truncatewords: 50 }}</p>
     </section>
-
-    <footer>
-      <p>
-        发表日期：<a href="{{ site.JB.archive_path }}#{{ post.date | date: '%B-%Y' }}" title="查看此月所有文章">{{ post.date | date: "%d %B %Y" }}</a>，
-        作者：<a href="mailto:{{ site.author.email }}" title="向作者发送邮件">{{ site.author.name }}</a>，
-        类别：<a href="{{ site.JB.categories_path }}#{{ post.category }}-ref" title="查看此类别下的所有文章">{{ post.category }}</a>{% if site.JB.comments.provider == 'duoshuo' %}，
-        评论：<a href="{{ post.url }}#ds-thread" title="查看此文章的评论"><span class="ds-thread-count" data-thread-key="{{ post.title }}" data-count-type="comments"></span></a>{% endif %}
-      </p>
-    </footer>
-
-  </article>
-  {% endfor %}
-
-  {% if site.JB.comments.provider == 'duoshuo' %}
-    {% assign duoshuo = 'jsonly' %}
-    {% include JB/comments-providers/duoshuo %}
+    <section class="post-meta">
+      <div class="post-date">{{ post.date | date: "%B %-d, %Y" }}</div>
+      <div class="post-categories">
+      {% if post.categories.size > 0 %}in {% for cat in post.categories %}
+        {% if site.jekyll-archives %}
+        <a href="{{ site.baseurl }}/category/{{ cat }}">{{ cat | capitalize }}</a>{% if forloop.last == false %}, {% endif %}
+        {% else %}
+        <span>{{ cat | capitalize }}</span>{% if forloop.last == false %}, {% endif %}
+        {% endif %}
+      {% endfor %}{% endif %}
+      </div>
+    </section>
+  </li>
+  {% if forloop.last == false %}
+  <hr>
   {% endif %}
+  {% endfor %}
+</ul>
 
-</section>
-
-<!-- Pagination Links -->
-<section class="pagination pagination-centered">
-  <ul>
-    <!-- First Page -->
-    {% if paginator.previous_page %}
-    <li><a href="/index.html">&laquo;&laquo;</a></li>
+<nav class="pagination" role="navigation">
+  <p>
+    {% if paginator.next_page %}
+    <a class="newer-posts" href="{{ site.baseurl }}/page{{paginator.next_page}}">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-square fa-stack-2x"></i>
+        <i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+      </span>
+    </a>
     {% else %}
-    <li class="disabled"><a href="#">&laquo;&laquo;</a></li>
+    <span class="fa-stack fa-lg">
+      <i class="fa fa-square fa-stack-2x"></i>
+      <i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+    </span>
     {% endif %}
-
-    <!-- Previous Page -->
+    <span class="page-number">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
     {% if paginator.previous_page %}
-    <li>
-      {% if paginator.previous_page == 1 %}
-      <a href="/index.html">&laquo;</a>
+      {% if paginator.page == 2 %}
+      <a class="newer-posts" href="{% if site.baseurl %}{{ site.baseurl }}{% endif %}/">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-square fa-stack-2x"></i>
+          <i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+        </span>
+      </a>
       {% else %}
-      <a href="/page{{ paginator.previous_page }}">&laquo;</a>
+      <a class="newer-posts" href="{{ site.baseurl }}/page{{paginator.previous_page}}">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-square fa-stack-2x"></i>
+          <i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+        </span>
+      </a>
       {% endif %}
-    </li>
     {% else %}
-    <li class="disabled"><a href="#">&laquo;</a></li>
+    <span class="fa-stack fa-lg">
+      <i class="fa fa-square fa-stack-2x"></i>
+      <i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+    </span>
     {% endif %}
+  </p>
+  <p>
+    <a href="{{ site.baseurl }}/posts">View All Posts by Category</a>
+  </p>
+</nav>
 
-    <!-- Current Page -->
-    <li class="active">
-      <span class="page_number ">第 {{ paginator.page }}/{{ paginator.total_pages }} 页</span>
-    </li>
-
-    <!-- Next Page -->
-    {% if paginator.next_page %}
-    <li><a href="/page{{paginator.next_page}}">&raquo;</a></li>
-    {% else %}
-    <li class="disabled"><a href="#">&raquo;</a></li>
-    {% endif %}
-
-    <!-- Last Page -->
-    {% if paginator.next_page %}
-    <li><a href="/page{{ paginator.total_pages }}">&raquo;&raquo;</a></li>
-    {% else %}
-    <li class="disabled"><a href="#">&raquo;&raquo;</a></li>
-    {% endif %}
-  </ul>
-</section>
-
+</div>
+</div>
