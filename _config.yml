@@ -10,9 +10,23 @@ encoding: utf-8
 #pygments: true
 highlighter: pygments
 #highlighter:pygments
-markdown: redcarpet
-redcarpet:
-  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript", "with_toc_data", "tables"]
+markdown: kramdown
+kramdown:
+#  input:  GFM
+#  use_coderay: true 
+  input: GFM
+  extensions:
+    - autolink
+    - footnotes
+    - smart
+  use_coderay: true
+  syntax_highlighter: rouge
+  coderay:
+    coderay_line_numbers:  nil
+
+#markdown: redcarpet
+#redcarpet:
+#  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript", "with_toc_data", "tables"]
 
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
