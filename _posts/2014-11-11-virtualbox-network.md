@@ -5,7 +5,7 @@ keywords: ["Mac", "network "]
 description: "network config on virtual server"
 category: "NetWork"
 tags: ["network","mac"]
-
+comments: true
 ---
 
 
@@ -14,11 +14,11 @@ tags: ["network","mac"]
 1. 能连接到外网
 2. mac 终端能ssh 到虚拟机
 
-##安装Ubuntu Server
+## 安装Ubuntu Server
 
     ubuntu-14.04.1-server-amd64.iso 
 
-##设置虚拟机配置
+## 设置虚拟机配置
 server=>Config打开虚拟机配置项
 
 NAT:
@@ -47,7 +47,8 @@ vboxnet0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 1500
 	inet 192.168.56.1 netmask 0xffffff00 broadcast 192.168.56.255
 ```
 
-##虚拟机网络配置
+## 虚拟机网络配置
+
 登陆虚拟机，修改
 /etc/network/interfaces
 
@@ -108,7 +109,8 @@ lo        Link encap:Local Loopback
 
 Done
 
-##说明：
+## 说明：
+
 学习Nginx时想尽量可能的接近线上环境去玩，所以才在虚拟机上装了Ubuntu-Server，但网络问题一直搞不定。
 网络基础是在差得一塌糊涂，网上查了三种连接方式，说得最多的是桥接，但鉴于天资实在有限，一直搞不定。
 今晚一怒之下，把三个adapter全配上了，莫名奇妙地可以了，这边只是简单做个笔记，mark一下。

@@ -5,14 +5,15 @@ keywords: ["GraphicsMagick", "CompositeImage"]
 description: "Composite Image with graphicsMagick "
 category: "GraphicsMagick"
 tags: ["GraphicsMagick"]
-
+comments: true
 ---
 
-##使用GraphicsMagick拼接图片(打图片水印)
+## 使用GraphicsMagick拼接图片(打图片水印)
+
 通过使用[CompositeImage](http://www.graphicsmagick.org/api/composite.html)给图片打图片水印
 
-##CompositeImage
-###语法
+## CompositeImage
+### 语法
 
 ```
 MagickPassFail CompositeImage( Image *canvas_image, const CompositeOperator compose,
@@ -22,7 +23,7 @@ MagickPassFail CompositeImage( Image *canvas_image, const CompositeOperator comp
 ```
 该接口将第二张图片（composite_image）拼接到第一张图片(canvas_image)的指定偏移上（x_offset,y_offset）
 
-###参数
+### 参数
 **canvas_image**
 
 画布，顾名思义，需要被修改的图对象
@@ -71,7 +72,7 @@ LightenCompositeOp|结果为composite_image比canvas_image亮部分覆盖在canv
 
 原图上的拼接行偏移
 
-##Sample
+## Sample
 
 参考GraphicsMagick [CompositeImage](http://www.graphicsmagick.org/api/composite.html)给图片打图片水印
 
@@ -79,7 +80,7 @@ LightenCompositeOp|结果为composite_image比canvas_image亮部分覆盖在canv
 
 <img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/disslove.jpg" alt="disslove.jpg" title="disslove.jpg" width="400" />
 
-###Code 
+### Code 
 
  [composite.cpp](https://github.com/AndreMouche/GraphicsStudy/blob/master/GraphicsMagicUsage/composite.cpp)
  

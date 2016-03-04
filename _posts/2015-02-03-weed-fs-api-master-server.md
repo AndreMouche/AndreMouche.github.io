@@ -5,7 +5,7 @@ keywords: ["weed-fs", "storage"]
 description: "api of weed-fs"
 category: "weed-fs"
 tags: ["weed-fs","storage"]
-
+comments: true
 ---
 
 ## API OF WEED-FS(Master Server)

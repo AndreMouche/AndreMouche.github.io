@@ -5,10 +5,10 @@ keywords: ["ffmpeg", "audio"]
 description: ""
 category: "ffmpeg"
 tags: ["ffmpeg"]
-
+comments: true
 ---
 
-##目录
+## 目录
  <div id="wmd-preview-section-24" class="wmd-preview-section preview-content">
 
 </div><div id="wmd-preview-section-11400" class="wmd-preview-section preview-content">
@@ -47,15 +47,17 @@ tags: ["ffmpeg"]
 </div></div>
 
 
-##概述
+## 概述
 
 本文将详细介绍编译安装ffmpeg,该ffmpeg将支持目前业界各主流音频格式，主要功能为支持mp2，mp3，flac，vorbis，wav，aac，amr，ac3，wma，wmv格式转为mp3/aac/amr。
 
-##依赖库安装
-###yasm1.3.0
+## 依赖库安装
+
+### yasm1.3.0
+
 编译安装 [yasm-1.3.0.tar.gz](http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz) 
 
-###安装mp3依赖库
+### 安装mp3依赖库
    错误
    
    ```
@@ -69,24 +71,24 @@ tags: ["ffmpeg"]
   apt-get install   libmp3lame-dev
   ```
 
-###ERROR: libopencore_amrnb not found
+### ERROR: libopencore_amrnb not found
 
 ```
 sudo apt-get install libx264-dev libxvidcore-dev libopencore-amrwb-dev libopencore-amrnb-dev libfaad-dev libfaac-dev libmp3lame-dev \
 libtwolame-dev liba52-0.7.4-dev libcddb2-dev libcdaudio-dev libcdio-cdda-dev libvorbis-dev libopenjpeg-dev
 ```
 
-###ERROR: libvo_amrwbenc not found
+### ERROR: libvo_amrwbenc not found
 
 http://sourceforge.net/projects/opencore-amr/files/vo-amrwbenc/
 
-###ERROR: libwavpack not found
+### ERROR: libwavpack not found
 
  ```
  sudo apt-get install libwavpack-dev
  ```
 
-###ERROR: libaacplus >= 2.0.0 not found
+### ERROR: libaacplus >= 2.0.0 not found
 
 [ffmpeg官网解决方案](https://trac.ffmpeg.org/wiki/How%20to%20quickly%20compile%20libaacplus)
 
@@ -101,17 +103,18 @@ $ make
 # ldconfig
 ```
 
-###ERROR: libfdk_aac not found
+### ERROR: libfdk_aac not found
 
 编译安装[libfdk_aac](http://sourceforge.net/projects/opencore-amr/?source=directory)
 
-###ERROR: libvo_aacenc not found
+### ERROR: libvo_aacenc not found
 
 编译安装[vo-aacenc-0.1.2.tar.gz](http://sourceforge.net/projects/opencore-amr/files/vo-aacenc/vo-aacenc-0.1.2.tar.gz/download)
 
-##编译安装ffmpeg
+## 编译安装ffmpeg
 
-###常用编译方式小结
+### 常用编译方式小结
+
 1.编译时设置通用参数
 
 ```
@@ -234,7 +237,8 @@ size=      10kB time=00:00:10.15 bitrate=   8.3kbits/s
 video:0kB audio:10kB subtitle:0 data:0 global headers:0kB muxing overhead 2.534965%
 ```
 
-###支持wav
+### 支持wav
+
 **编译**
 
 ```
@@ -561,7 +565,7 @@ size=      10kB time=00:00:10.22 bitrate=   8.3kbits/s
 video:0kB audio:10kB subtitle:0 data:0 global headers:0kB muxing overhead 2.517361%
 ```
 
-###支持wma/wmv
+### 支持wma/wmv
 
 编译参数
 
@@ -588,7 +592,7 @@ video:0kB audio:10kB subtitle:0 data:0 global headers:0kB muxing overhead 2.5173
     --enable-decoder=wmv3image \
 ```
 
-###本次编译涉及所有配置项
+### 本次编译涉及所有配置项
 
 ```
 ./configure \

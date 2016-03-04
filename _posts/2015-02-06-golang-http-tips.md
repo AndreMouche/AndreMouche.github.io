@@ -5,10 +5,10 @@ keywords: ["golang", "net"]
 description: "little tips for golang net package "
 category: "golang"
 tags: ["golang","net"]
-
+comments: true 
 ---
 
-##“use of closed network connection”
+## “use of closed network connection”
 
 http.Client执行do出现“use of closed network connection”,是因为传入的req对象的body已被关闭，
 
@@ -35,7 +35,7 @@ func NewRequest(method, urlStr string, body io.Reader) (*Request, error)
 ## “EOF” vs "connection reset by peer"
 
 高并发下会触发以上两类问题。
-###"EOF"
+### "EOF"
 
 出现EOF归根到底是因为服务端主动关闭了连接。
 
@@ -58,11 +58,11 @@ golang在调用http.Client.Do函数时，会按以下步骤执行：
 2.“EOF” 是服务端接收了连接，并主动关闭连接，抓包过程中可以看到完整的四次握手，断开连接过程
 <img src="../images/2015-02-06-golang-http-tips/eof.jpg" width=500/>
 
-####测试代码：
+#### 测试代码：
 * [server](https://github.com/AndreMouche/LittleTools/blob/master/golang/httpDemo/server.go)
 * [client](https://github.com/AndreMouche/LittleTools/blob/master/golang/httpDemo/client.go)
 
-####错误重现：
+#### 错误重现：
 1. EOF:将client连接数设为1，server的sleep时间加长，请求未完成时，关闭server进程
 2. "connection reset by peer"：将server所在机器的并发量设小：
     * ulimit -n 64

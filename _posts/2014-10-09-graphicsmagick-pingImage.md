@@ -5,40 +5,40 @@ keywords: ["GraphicsMagick", "PingImage"]
 description: "Get pic info with graphicsMagick "
 category: "GraphicsMagick"
 tags: ["GraphicsMagick"]
-
+comments: true
 ---
 
-##使用GraphicsMagick提取图片基本信息
+## 使用GraphicsMagick提取图片基本信息
 
 通过使用[PingImage](http://www.graphicsmagick.org/api/constitute.html#pingimage)获取图片基本属性。
 
-##PingImage
+## PingImage
 
-###简介
+### 简介
 
 ```
 Image *PingImage( const ImageInfo *image_info, ExceptionInfo *exception );
 ```
 
-###说明
+### 说明
 
 * 它返回指定图片除像素（Pixels）以外的所有属性。
 * 相比ReadImage它更快，且使用更少内存。
 * 执行失败时，返回Image为NULL，且通过exception返回详细失败信息。
 
-###参数
+### 参数
 
 **image_info **
  该参数为由文件或文件名初始化的ImageInfo对象
 
 
 
-##Sample
+## Sample
 
 参考GraphicsMagick[官方文档](http://www.graphicsmagick.org/api/types.html#image)
 提取图片基本信息
 
-###Code 
+### Code 
 
 image_info.cpp
 
@@ -120,7 +120,7 @@ program_exit:
 
 ```
 
-###编译
+### 编译
 
 ```
 g++ image_info.cpp `GraphicsMagick-config --cppflags --ldflags --libs`

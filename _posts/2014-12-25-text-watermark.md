@@ -5,9 +5,9 @@ keywords: ["GraphicsMagick", "Annotate","CompositeImage"]
 description: "text watermark with graphicsmagick"
 category: "GraphicsMagick"
 tags: ["GraphicsMagick"]
-
+comments: true 
 ---
-#基于graphicMagick实现图片文字水印
+# 基于graphicMagick实现图片文字水印
 <ul>
 <li><a href="#使用graphicmagick实现图片文字水印">使用graphicMagick实现图片文字水印</a><ul>
 <li><a href="#背景及需求">背景及需求</a></li>
@@ -36,7 +36,7 @@ tags: ["GraphicsMagick"]
 
 
 
-##背景及需求
+## 背景及需求
 使用GraphicMagick给图片打文字水印，
 除文字内容，字体，字体大小等基本属性外，要求可调以下参数：
 1.指定文字GravityType，其中Gravity为以下九宫格：
@@ -59,16 +59,16 @@ SouthWest     |     South      |     SouthEast
 
 3.可指定文字的透明度
 
-##分析
-###水印位置
+## 分析
+### 水印位置
 水印位置由Gravity和dx,dy共同决定，其中Annotate中可直接指定Gravity，但dx,dy没有直接的参数可以设置。
-###水印透明度
+### 水印透明度
 文字水印Annotate无法指定文字透明度
 
-##实现方案
+## 实现方案
 介于以上分析，无法直接使用AnnotateImage来实现，设计方案如下：
 
-###Step 1. 构造水印画布
+### Step 1. 构造水印画布
 
 画一张与原图image同样大小的透明图片textImg,作为文字水印的画布
 
@@ -81,7 +81,6 @@ SouthWest     |     South      |     SouthEast
 
 
 ```
-
 /**
  * Constitute a transparent Image with nCloumns and nRows
  * @param:img,pointer to save the dest image 
@@ -146,7 +145,9 @@ bool DrawText(Image *& image, const char * text, const double font_pointsize,con
 }
 
 ```
-###Step 3:裁减获得文字logo
+
+### Step 3:裁减获得文字logo
+
 分析图textImg的每一个像素，找到包含水印文字的最小矩形所在位置，使用CropImage获得该矩形所在图作为logo。
 
 ```
@@ -207,7 +208,9 @@ Image * trimImage(Image *& image){
 }
 
 ```
+
 ### Step 4:设置文字logo透明度
+
 设置logo图片非透明部分透明度
 
 ```
@@ -242,7 +245,8 @@ MagickPassFail dissolveImage(Image *image,int dissolve){
 }
 
 ```
-###Step 5:将logo打到原图对应位置
+
+### Step 5:将logo打到原图对应位置
  
 根据gravity算出logo图该落的偏移位置x_offset,y_offset,以CompositeImage的方式将logo图片拼接到原图上。
 
@@ -337,11 +341,13 @@ bool compositeImage(Image *image,Image *logo,GravityType gravity,long dx,long dy
 
 ```
 
-##完整示例
-###代码
+## 完整示例
+
+### 代码
+
 [water_mark_txt](https://github.com/AndreMouche/GraphicsStudy/blob/master/GraphicsMagicUsage/water_mark_txt.cpp)
 
-###效果
+### 效果
 
 <img src="https://github.com/AndreMouche/GraphicsStudy/blob/master/GraphicsMagicUsage/data/water_mark_txt.jpg?raw=true" alt="water_mark_txt.jpg" title="water_mark_txt.jpg" width="400" />
 
