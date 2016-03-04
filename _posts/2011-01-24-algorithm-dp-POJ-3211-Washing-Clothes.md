@@ -5,19 +5,19 @@ keywords: ["algorithm", "背包","POJ"]
 description: "POJ 3211 Washing Clothes [背包]解题报告"
 category: "algorithm"
 tags: ["ACM","背包","DP"]
-
+comments: true
 ---
 
 [POJ 3211 Washing Clothes](http://poj.org/problem?id=3211)
 
-##核心算法：
+## 核心算法：
 01背包
 
-##解题思路： 
+## 解题思路： 
 首先按颜色对衣服进行归类，即将相同颜色的衣服放在同一类中
 对于某一种颜色的所有衣服所需要的最少时间，相当于将这堆衣服按时间分为两推，使得这两堆衣服所需要的时间尽可能的接近。
 
-###对于每堆衣服建模：
+### 对于每堆衣服建模：
    假设当前这堆衣服一个人洗的时间为sum, 令mid = sum/2;
    
 **问题转化为**
@@ -30,7 +30,8 @@ tags: ["ACM","背包","DP"]
 
   那么问题（2）中的dp[mid]相当于问题（1）中最接近于mid的那个容量，故原问题中这堆衣服所需要的实际时间为***sum - dp[mid]***;
   
-##Answer
+## Answer
+
 ```c++
 #include<stdio.h>
 #include<string.h>

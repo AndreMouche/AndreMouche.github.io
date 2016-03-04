@@ -5,15 +5,17 @@ keywords: ["algorithm", "POJ"]
 description: "POJ 3254 Corn Fields【dp 状态压缩】解题报告"
 category: "algorithm"
 tags: ["ACM"]
-
+comments: true 
 ---
 
 [POJ 3254  Corn Fields](http://poj.org/problem?id=3254)
 
-#算法核心
+# 算法核心
+
 状态压缩,DP
 
-#题意
+# 题意
+
 输入m行n列的数字，其中为1或者是0
 
 1表示土壤肥沃可以种植草地，0则不可以。
@@ -22,7 +24,7 @@ tags: ["ACM"]
 块区域不允许同时放牛，问有多少种放牛的方法？
 （不放牛也算一种情况）
 
-#分析
+# 分析
  由m,n<=12,可用状态压缩
  
  对于第i行，可以放草的格子置为0，不可以种草的格子设置为1，整一行的状态存入graph[i]中

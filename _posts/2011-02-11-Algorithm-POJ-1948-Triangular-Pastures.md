@@ -5,17 +5,19 @@ keywords: ["algorithm", "POJ"]
 description: "背包问题--POJ 1948 Triangular Pastures 解题报告"
 category: "algorithm"
 tags: ["ACM","dp"]
-
+comments: true
 ---
 
 
 [POJ 1948 Triangular Pastures](http://poj.org/problem?id=1948)
-#题目描述：
+
+# 题目描述：
 >给最多40根木棍，每根长度不超过40，
 >要用完所有的木棍构成面积最大的三角形，
 >求出最大的面积。
 
-#算法核心
+# 算法核心
+
 二维01背包
  
 ***使用到海伦公式***：
@@ -26,7 +28,7 @@ tags: ["ACM","dp"]
   而公式里的p为半周长： 
   p=(a+b+c)/2
 
-#分析：
+# 分析：
 用dp[i][j][k]表示到第i根木棒能否摆出边长分别为j,k的三角形
      易得 
      
@@ -38,7 +40,8 @@ dp[i][j][k] = dp[i-1][j-x[i]][k]|dp[i-1][j][k-x[i]]|dp[i-1][j][k];
   空间压缩，化为二维dp，注意：这里每根木棒只能使用一次，
   是01背包，要倒着扫（刚开始错在这里了。。。）
   
-#Answer
+# Answer
+
 ```
 #include<stdio.h>
 #include<string.h>

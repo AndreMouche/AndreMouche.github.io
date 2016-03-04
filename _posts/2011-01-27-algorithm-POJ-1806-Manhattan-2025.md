@@ -5,11 +5,11 @@ keywords: ["algorithm", "POJ"]
 description: "POJ 1806 Manhattan 2025 解题报告"
 category: "algorithm"
 tags: ["ACM","DP"]
-
+comments: true
 ---
 [POJ 1806 Manhattan 2025 ](http://poj.org/problem?id=1806)
 
-#大意
+# 大意
 
 在一个三维空间里面，有一交通工具通过一单位长度需要一升汽油，现有n升汽油，画出该交通工具在各层的运输情况
       
@@ -19,20 +19,20 @@ tags: ["ACM","DP"]
 
    当n>9时，不需要统计
 
-#Example:
+# Example:
 
  n = 2 时，若标记当前这一层为0层，则该情况下交通工具所能达到的层次为-2层到2层，即共5层，分别为-2,-1,0,1,2层,将每一层的二维图输出即可。
  
 题目中要求将最底层即为1，那么在该情况下，上述各层对应为第1,2,3,4,5层，其中交通工
 具所在的位置为第3层。
 
-#分析
+# 分析
  通过简单的推断可发现，各层的情况以当前交通工具所在层为中心对称，故可用递归实现~
 
  
-#Answer
+# Answer
 
-```c++
+```
 #include<stdio.h>
 #include<math.h>
 void draw(int n,int row,int floor)//画出距离交通工具所在层floor层的二维图

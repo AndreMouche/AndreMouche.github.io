@@ -5,11 +5,13 @@ keywords: ["algorithm", "POJ"]
 description: "POJ 1761 Easy Task 解题报告"
 category: "algorithm"
 tags: ["ACM"]
-
+comments: true 
 ---
 [POJ 1761 Easy Task](http://poj.org/problem?id=1761)
-##题意
- 给你n条提交问题的信息，每条信息包含提交时间，提交队伍，提交题目编号，是否AC信息，统计这n条信息，要求输出每个问题的信息，包括题号，提交次数，平均提交次数，平均提交时间
+
+## 题意
+
+给你n条提交问题的信息，每条信息包含提交时间，提交队伍，提交题目编号，是否AC信息，统计这n条信息，要求输出每个问题的信息，包括题号，提交次数，平均提交次数，平均提交时间
  
 PS:
 
@@ -17,7 +19,7 @@ PS:
 
 2.只对已经AC的队伍进行统计，即提交次数 = SUM(已AC的队伍的总共提交次数)，不对未AC的队伍进行统计
 
-##分析：
+## 分析：
   1. 用map<string,int>存储队伍信息，编号
   2. 用accept[i][j]表示第j支队伍是否AC问题i
   3. 用actime[i][j]表示第j支队伍共提交问题i的次数
@@ -27,9 +29,9 @@ PS:
   亦对于问题i,只有当队伍j已经AC了该题目时（accept[i][j]==true）,
   才将其提交次数actime[i][j]统计入i题的总提交次数内
 
-##Answer
+## Answer
 
-```c++
+```
 #include<stdio.h>
 #include<string>
 #include<iostream>

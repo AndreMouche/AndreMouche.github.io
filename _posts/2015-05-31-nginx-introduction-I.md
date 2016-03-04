@@ -5,11 +5,11 @@ keywords: ["nginx"]
 description: "nginx"
 category: "nginx"
 tags: ["nginx"]
-
+comments: true
 ---
 
 
-##Nginx 介绍（译文I--为什么高并发很重要）
+## Nginx 介绍（译文I--为什么高并发很重要）
 * 原文 [nginx](http://www.aosabook.org/en/nginx.html)
 * 作者 [Andrew Alexeev](http://www.aosabook.org/en/intro2.html#alexeev-andrew)
 
@@ -26,7 +26,7 @@ tags: ["nginx"]
 </ul>
 
 
-##本章目录
+## 本章目录
 
 <ul>
 <li><a href="#概述">概述</a></li>
@@ -40,7 +40,7 @@ tags: ["nginx"]
 
 
 
-##概述
+## 概述
 
 nginx(发音为‘engine x’)是俄罗斯软件工程师 Igor Sysoev开发的一款免费开源的web服务器。自2004年开源以来，nginx一直专注于**高性能、高并发、低内存消耗**。 
 此外，nginx具备web服务器最常用的功能，如:
@@ -52,7 +52,7 @@ nginx(发音为‘engine x’)是俄罗斯软件工程师 Igor Sysoev开发的�
 
 这些特性使得nginx非常适用于现代web站点架构。目前，nginx是网上第二大流行的开源web服务器软件。
 
-##为什么高并发很重要？
+## 为什么高并发很重要？
 
 **相比十年前，互联网已得到了广泛的普及与应用**。
 现在我们甚至难以想象离开互联网的世界。
@@ -106,7 +106,7 @@ nginx(发音为‘engine x’)是俄罗斯软件工程师 Igor Sysoev开发的�
 
 这些显然也很重要。因此，网站服务器需具备能够随着同时并发连接数和每秒请求数的增长而非线性扩展的能力。
 
-###Apache不适用了吗？
+### Apache不适用了吗？
 
 起源于90年代初期Apache网站服务器，目前依旧主导着整个互联网。Apache的架构设计不仅仅适合于当时的操作系统和硬件，同时也十分符合当时的互联网环境－－一个网站通常使用一台物理服务器运行一个Apache实例。
 
@@ -143,7 +143,7 @@ nginx(发音为‘engine x’)是俄罗斯软件工程师 Igor Sysoev开发的�
 
 2012年2月，Apache 2.4.x版本发布。虽然最新版本的apache为加强可伸缩性和性能，增加了新的并发处理核心模块和代理模块。但要说性能、并发能力和资源利用率是否能赶上或超过纯事件驱动模型的web服务器还为时尚早。更高性能的Apache新版本令人高兴，但对于nginx+Apache的web网站架构，虽然这能够缓解后端潜在的瓶颈，却依旧无法解决部分遗留问题。
 
-###使用nginx有更多优势吗？
+### 使用nginx有更多优势吗？
 
 高性能高效地处理高并发一直是部署nginx最关键的优势。除此之外，还有更多有意义的优势。
 

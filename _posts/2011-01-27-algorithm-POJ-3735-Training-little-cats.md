@@ -5,15 +5,18 @@ keywords: ["algorithm", "POJ"]
 description: "POJ 3735 Training little cats 解题报告"
 category: "algorithm"
 tags: ["ACM"]
-
+comments: true
 ---
 
 [POJ 3735 Training little cats](http://poj.org/problem?id=3735)
-#算法核心：
+
+# 算法核心：
+
 矩阵建模，矩阵的快速幂
 
 
-#大意：
+# 大意：
+
 已知有n只猫咪，开始时每只猫咪有花生米0颗，先有一组操作：
 由下面三个中的k个操作组成：
 
@@ -25,7 +28,8 @@ tags: ["ACM"]
 
  
 
-#分析
+# 分析
+
 因m的数据范围较大，用矩阵连乘。
 
 构建矩阵模型，peanut[N] = {0,0，。。。。0,1}：即前n个数为0,最后一个数取1
@@ -110,7 +114,7 @@ peanut的前n个数即为每只猫咪拥有的花生米数
 
 ＃Answer
 
-```c++
+```
 #include<stdio.h>
 #include<string.h>
 constint N =100+5;

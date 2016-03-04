@@ -5,10 +5,10 @@ keywords: ["nginx", "install"]
 description: "configure and install nginx on mac"
 category: "nginx"
 tags: ["nginx","mac"]
-
+comments: true
 ---
 
-##安装PCRE
+## 安装PCRE
 
 
 可以在[官网](http://www.pcre.org/)下载pcre最新版。
@@ -21,7 +21,7 @@ sudo make
 sudo make install
 ```
 
-##安装Nginx
+## 安装Nginx
 
 在[Nginx官网](http://nginx.org/)下载Nginx 最新版
 
@@ -31,7 +31,7 @@ cd nginx-1.6.2
 ./configure
 ```
 
-###编译概要
+### 编译概要
 
 ```
 Configuration summary
@@ -71,7 +71,7 @@ sudo make
 sudo make install
 ```
 
-###编译概要
+### 编译概要
 
 ```
 Configuration summary

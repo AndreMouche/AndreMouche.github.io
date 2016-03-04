@@ -6,7 +6,7 @@ description: "nginx"
 category: "nginx"
 tags: ["nginx"]
 auther: Shilry
-
+comments: true
 ---
 
 
