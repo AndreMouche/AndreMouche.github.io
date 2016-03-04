@@ -5,11 +5,14 @@ keywords: ["dp", "leetcode"]
 description: "leetcode-candy"
 category: "algorithm"
 tags: ["algorithm","leetcode"]
-
+comments : true
 ---
 
+
+## 大意
+
 [candy](https://oj.leetcode.com/problems/candy/)
-##大意
+
 有n个小伙伴排成一列，每个小伙伴有一个评分，先给其发蛋糕，要求满足以下条件：
 
 1. 每人至少有一个蛋糕
@@ -17,11 +20,13 @@ tags: ["algorithm","leetcode"]
 
 问：最少需要多少糖果给这些人？
 
-##思路
+## 思路
+
 DP+Greedy
 空间复杂度O(N)，时间复杂度O(N)
 
 dp[i][0]表示第i左侧有多少数字连续递减的
+
 ```
 if(ratings[i]>ratings[i-1]) {
   dp[i][0] = dp[i-1]+1
@@ -40,6 +45,7 @@ if(ratings[i]>ratings[i+1]) {
   dp[i][1] = 0;
 }
 ```
+
 同样的，第i位置要满足友邻条件需要的糖果数至少为dp[i][1]+1
 那么每个位置的最小蛋糕数为
 
@@ -58,4 +64,4 @@ ans[i] = max(dp[i][0],dp[i][1]) +1
 2. ans[i+1] = max(dp[i][0]+1,dp[i+1][1]) +1
 无论如何，ans[i+1]>ans[i] ，满足条件2.
 
-[详细代码]()
+[详细代码](https://github.com/AndreMouche/algorithms_study/blob/master/leetcode/candy.cpp)
