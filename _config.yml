@@ -12,7 +12,7 @@ url: http://scotte.github.io
 #     run it like so: jekyll serve --baseurl=''
 #baseurl: /jekyll-clean/
 #baseurl: /blog
-
+baseurl: ""
 # This can be '' to hide the Github nav button
 github: 'scotte/jekyll-clean'
 
