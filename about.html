@@ -1,0 +1,190 @@
+---
+layout: page
+title: "About"
+description: "Hey, this is Shirly Wu."
+header-img: "img/about-bg.jpg"
+---
+
+<!-- Language Selector -->
+<select onchange= "onLanChange(this.options[this.options.selectedIndex].value)">
+    <option value="0" selected> 中文 Chinese </option>
+    <option value="1"> 英文 English </option>
+</select>
+
+<!-- Chinese Version -->
+<div class="zh post-container">
+
+ <section>
+      <h2 id="个人简介">个人简介</h2>
+
+<p>Hi,我叫<code>Shirly</code>.</p>
+
+<p>我呢，崇尚自由，热爱冒险，喜欢剥削，迷恋topcoder,曾因为对黑客男神的极度仰慕崇拜而学习编程哈。</p>
+
+<p>作为一个Acmer败类，脑子有点直，不太会说话，做事只知道input和output。 工作不少年，技术没长进，只有对技术和技术男热爱的心依旧哈。</p>
+
+<p>虽然又笨又懒，但想做大牛的心六年如一日，为给自己的青春留下些美好的回忆，故开此博客，企图一入github深似海，从此独立又自强（原本想说从此男神成邻居，低调低调哈）。</p>
+
+<p>虽说人生若只如初见，与技术相遇近六年，迷恋依旧，期待与志同道合的童鞋一起进步哈～</p>
+
+<div id="fixed-container" style="position: static; top: 0px;">
+  <section>
+    <a href="#"><i class="icon-fixed-width icon-code"></i> 成长足迹</a>
+<ul>
+  <li><a href="http://github.com/AndreMouche">github首页</a></li>
+  <li><a href="http://www.cnblogs.com/AndreMouche/">年轻时的博客</a></li>
+  <li><a href="http://blog.sina.com.cn/myacmsky">年少时的博客</a></li>
+  <li><a href="http://www.douban.com/people/AndreMouche/">伪文艺时期的豆瓣</a></li>
+</ul>
+
+  </section>
+  <section>
+    <a href="#"><i class="icon-fixed-width icon-heart"></i> 与我联系</a>
+    <div id="contacts-list"> 
+      <ul>
+        <li><a href="mailto:AXuelianWu@gmail.com" target="_blank" title="Gmail">邮件</a> </li>
+    <li>
+  <a href="https://github.com/AndreMouche" target="_blank" title="Github">github
+  </a>
+  </li>
+  <li>
+  <a href="http://weibo.com/happyprogrammer" target="_blank" title="新浪微博">新浪微博
+  </a>
+  </li>
+  </ul> 
+</div>
+
+  </section>
+  <section>
+    <a href="#"><i class="icon-fixed-width icon-link"></i> 友情链接</a>
+<ul>
+  <li><a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers" target="_blank">Liquid 模板引擎</a></li>
+  <li><a href="http://jekyllrb.com/" target="_blank">Jekyll 静态博客生成器</a></li>
+</ul>
+
+  </section>
+</div>
+    </section>
+   <!--copied from markdown -->
+
+
+</div>
+
+<!-- English Version -->
+<div class="en post-container">
+    <blockquote><p>TODO. <br>
+
+    <h5>Talks</h5>
+    TODO
+
+    <ul>
+    </ul>
+
+
+    <h5>Resumes</h5>
+     TODO
+    <ul>
+    </ul>
+</div>
+
+<!-- Handle Language Change -->
+<script type="text/javascript">
+    // get nodes
+    var $zh = document.querySelector(".zh");
+    var $en = document.querySelector(".en");
+    var $select = document.querySelector("select");
+
+    // bind hashchange event
+    window.addEventListener('hashchange', _render);
+
+    // handle render
+    function _render(){
+        var _hash = window.location.hash;
+        // en
+        if(_hash == "#en"){
+            $select.selectedIndex = 1;
+            $en.style.display = "block";
+            $zh.style.display = "none";
+        // zh by default
+        }else{
+            // not trigger onChange, otherwise cause a loop call.
+            $select.selectedIndex = 0;
+            $zh.style.display = "block";
+            $en.style.display = "none";
+        }
+    }
+
+    // handle select change
+    function onLanChange(index){
+        if(index == 0){
+            window.location.hash = "#zh"
+        }else{
+            window.location.hash = "#en"
+        }
+    }
+
+    // init
+    _render();
+</script>
+
+
+
+{% if site.duoshuo_username %}
+<!-- 多说评论框 start -->
+<div class="comment">
+    <div class="ds-thread"
+    {% if site.duoshuo_username == "huxblog" %}
+        data-thread-id="1187623191091085319"
+    {% else %}
+        data-thread-key="{{site.duoshuo_username}}/about"
+    {% endif %}
+
+    data-title="{{page.title}}"
+    data-url="{{site.url}}/about/"></div>
+</div>
+<!-- 多说评论框 end -->
+
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    // dynamic User hacking by Hux
+    var _user = '{{site.duoshuo_username}}';
+
+    // duoshuo comment query.
+    var duoshuoQuery = {short_name: _user };
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+{% endif %}
+
+
+{% if site.disqus_username %}
+<!-- disqus 评论框 start -->
+<div class="comment">
+    <div id="disqus_thread" class="disqus-thread">
+
+    </div>
+</div>
+<!-- disqus 评论框 end -->
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "{{site.disqus_username}}";
+    var disqus_identifier = "{{site.disqus_username}}/{{page.url}}";
+    var disqus_url = "{{site.url}}{{page.url}}";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+{% endif %}
