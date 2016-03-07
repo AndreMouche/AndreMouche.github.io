@@ -5,26 +5,27 @@ keywords: ["GraphicsMagick", "webp"]
 description: "support webp  in graphicsMagick "
 category: "GraphicsMagick"
 tags: ["GraphicsMagick"]
-
+comments: true
 ---
 
-##WEBP支持
-###安装配置
+## WEBP支持
 
-####software
+### 安装配置
+
+#### software
 
    * GraphicsMagick 1.3.20 
    * https://webp.googlecode.com/files/libwebp-0.4.0.tar.gz
 
-##install
+## install
 
    * 编译安装libwebp
    * 编译安装GraphicsMagicks时，指定libwebp安装位置：
   
-  ```
+```
     ./configure  --prefix=/home/wuxuelian/software/graphicsmagick/build CPPFLAGS='-I/home/wuxuelian/software/libwebp/build/include' LDFLAGS='-L/home/wuxuelian/software/libwebp/build/lib' 
 
-  ```
+```
     
 确保Configure结果中WEBP那项为YES
 
@@ -84,7 +85,8 @@ Options used to compile and link:
   LIBS     = -lwebp -lfreetype -ljpeg -lpng16 -lbz2 -lxml2 -lz -lm -lpthread
 ```
 
-####测试安装是否成功
+#### 测试安装是否成功
+
 ```
 [wuxuelian@wuxuelianmaccom:~/study/github/graphicsmagick]$ gm convert data/god.jpg god.webp
 [wuxuelian@wuxuelianmaccom:~/study/github/graphicsmagick]$ exiftool god.webp 
@@ -106,5 +108,6 @@ Vertical Scale                  : 0
 Image Size                      : 1024x768
 ```
 
-###其它功能支持
-####不支持interlace渐近功能
+### 其它功能支持
+
+#### 不支持interlace渐近功能

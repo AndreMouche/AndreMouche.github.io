@@ -5,10 +5,13 @@ keywords: ["algorithm", "算法设计与分析"]
 description: "统计数字问题解题报告"
 category: "algorithm"
 tags: ["ACM"]
-
+comments: true
 ---
-#统计数字问题
-##Description
+
+# 统计数字问题
+
+## Description
+
 一本书的页码从自然数1 开始顺序编码直到自然数n。书的页码按照通常的习惯编排，
 每个页码都不含多余的前导数字0。例如，第6 页用数字6 表示，而不是06 或006 等。数
 字计数问题要求对给定书的总页码n，计算出书的全部页码中分别用到多少次数字0，1，
@@ -22,12 +25,14 @@ tags: ["ACM"]
 输出文件共有10行，在第k行输出页码中用到数
 字k-1 的次数，k=1，2，…，10。
 
-##Sample Input
+## Sample Input
+
 ```
 11
 ```
 
-##Sample Output
+## Sample Output
+
 ```
 1
 4
@@ -41,9 +46,9 @@ tags: ["ACM"]
 1
 ```
 
-###Answer
+### Answer
+
 ```
-代码
 #include<stdio.h>  
 #include<string.h>  
 constint N =10;  

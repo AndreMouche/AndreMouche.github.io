@@ -5,11 +5,12 @@ keywords: ["BPG", "Graphics"]
 description: "information of bpg"
 category: "Graphics"
 tags: ["BPG"]
-
+comments: true
 ---
 
-<h1 id="bpg调研">BPG调研</h1>
-## 目录 ##
+# BPG调研
+
+## 目录 
 
 <div><div class="toc"><div class="toc">
 <ul>
@@ -34,7 +35,7 @@ tags: ["BPG"]
 
 本文基于libbpg-0.9.5展开调研
 
-##简介##
+## 简介 
 
 BPG是一种新型的图片格式。其设计初衷在于当图片质量或文件size成为瓶颈时，取代JPEG。其主要特点如下：
 
@@ -48,8 +49,9 @@ BPG是一种新型的图片格式。其设计初衷在于当图片质量或文�
 8. 支持动画
 
 
-##工具##
-###兼容性
+## 工具
+
+### 兼容性
 
 bpg作为一种新型图片格式，对其支持的工具尚不健全。除了[官方](http://bellard.org/bpg/)[推荐工具](http://bellard.org/bpg/libbpg-0.9.5.tar.gz)可用外，像GraphicsMagick、ffmpeg,exiftool等主流多媒体处理软件尚未对其支持。
 
@@ -67,7 +69,7 @@ bpg官方发布的工具支持三种系统，具体情况如下：
 
 WEBP浏览器：需带上js解码库。
 
-###安装###
+### 安装
 
 **windows**
 
@@ -85,7 +87,7 @@ WEBP浏览器：需带上js解码库。
 4. 编译安装[libbpg-0.9.5.tar.gz](http://bellard.org/bpg/libbpg-0.9.5.tar.gz)
 
 
-###效果示例###
+### 效果示例 
 
 左边是BPG 效果而右边是JPG
 ![](http://cdn.unwire.hk/wp-content/uploads/2014/12/comparison.jpg)
@@ -100,9 +102,11 @@ WEBP浏览器：需带上js解码库。
 完整的html示例
 
 
-##性能##
-###BPG编解码性能
- 测试场景：
+## 性能
+
+### BPG编解码性能
+
+测试场景：
 
 1.  数据：线上1000张图片转换而得的各类格式
 2.  环境：Ubuntu 14.04.1 LTS (GNU/Linux 3.13.0-32-generic x86_64)
@@ -119,7 +123,7 @@ WEBP浏览器：需带上js解码库。
 2.  PNG可与BPG自由转换，任意JPG可成功转为BPG。
 3.  PNG/JPG转换为BPG耗时较长，BPG转回PNG相对较快。
 
-###与WEBP对比
+### 与WEBP对比
 
 webp测试场景
 1.  数据：线上1000张图片转换而得的各类格式

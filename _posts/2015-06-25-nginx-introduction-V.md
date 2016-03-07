@@ -5,11 +5,12 @@ keywords: ["nginx"]
 description: "nginx"
 category: "nginx"
 tags: ["nginx"]
-
+author: Shirly
+comments : true
 ---
 
 
-##Nginx 介绍（译文V--总结）
+## Nginx 介绍（译文V--总结）
 
 
 * 原文 [nginx](http://www.aosabook.org/en/nginx.html)

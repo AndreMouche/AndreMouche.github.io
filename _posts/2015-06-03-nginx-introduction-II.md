@@ -5,11 +5,11 @@ keywords: ["nginx"]
 description: "nginx"
 category: "nginx"
 tags: ["nginx"]
-
+comments: true
 ---
 
 
-##Nginx 介绍（译文II--Nginx架构综述）
+## Nginx 介绍（译文II--Nginx架构综述）
 
 * 原文 [nginx](http://www.aosabook.org/en/nginx.html)
 * 作者 [Andrew Alexeev](http://www.aosabook.org/en/intro2.html#alexeev-andrew)
@@ -26,11 +26,11 @@ tags: ["nginx"]
 </li>
 </ul>
 
-##本章目录
+## 本章目录
+
 <ul>
 <li><a href="#Nginx架构综述">Nginx架构综述</a></li>
 <ul>
-<div>
 <li><a href="#代码结构">代码结构</a></li>
 <li><a href="#worker模型">Worker模型</a></li>
 <li><a href="#nginx进程角色">Nginx进程角色</a></li>
@@ -41,7 +41,7 @@ tags: ["nginx"]
 
 
 
-##Nginx架构综述
+## Nginx架构综述
 
 使用单独的线程或进程处理每个连接,是基于线程或进程处理并发连接的传统做法。
 
@@ -72,7 +72,7 @@ tags: ["nginx"]
 
 Nginx主要使用了**多路复用**与**事件通知**方式，将各个任务分发给各个特定进程。所有的请求连接由数量有限的进程（被称为worker）处理，各个worker使用一个高效的单线程循环处理，每个worer进程每秒可处理上千个并发和请求。
 
-###代码结构
+### 代码结构
 
 Nginx worker的代码包含**核心**和**功能模块**。
 
@@ -97,7 +97,7 @@ Nginx通过使用事件通知机制和一系列提高IO的工具(在Linux、Sola
 
 nginx-architecture.png-nginx架构图
 
-###Worker模型
+### Worker模型
 
 如前面提到的，**nginx不会为每个连接创建新的进程或线程**。而是由worker进程各自通过共享“监听”socket来接收新请求，同时每个worker内部会使用一个高效的处理循环来处理上千个连接。在Nginx中，不存在特定的仲裁器或分发器用以分发连接给各个worker，这个工作由操作系统内核机制完成。服务启动时，一组监听socket被创建并完成初始化，workers进程不断地从这些套接字接受、读取HTTP请求和输出响应。
 
@@ -136,7 +136,7 @@ nginx-architecture.png-nginx架构图
 
 **对嵌入脚本的支持有限**，是当前的worker模型存在的另一个问题。例如，标准的nginx发布版本只支持Perl作为嵌入脚本语言。原因很简单：关键是嵌入脚本很可能会在任何操作上阻塞或者异常退出，而这两个行为都会直接导致worker进程挂住而同时影响数千个连接。与此相关的更多工作已列入Nginx开发计划，即将脚本更简单，更可靠地嵌入nginx并且更适合广泛应用。
 
-##Nginx进程角色
+## Nginx进程角色
 
 Nginx在内存中运行多个进程：
 
@@ -178,7 +178,7 @@ Worker进程负责：
 
 缓存管理进程主要负责缓存过期和失效。它在nginx正常操作时存在于内存中，在出现故障时由master进程重启。
 
-###Nginx缓存概述
+### Nginx缓存概述
 
 Nginx的缓存基于文件系统使用分层数据存储实现，特点如下：
 

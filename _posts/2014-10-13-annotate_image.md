@@ -5,18 +5,21 @@ keywords: ["GraphicsMagick", "AnnotateImage"]
 description: "annotate pic  with graphicsMagick "
 category: "GraphicsMagick"
 tags: ["GraphicsMagick"]
-
+comments: true
 ---
 
-##使用GraphicsMagick打文字水印
+## 使用GraphicsMagick打文字水印
+
 使用[AnnotateImage](http://www.graphicsmagick.org/api/annotate.html)给图片打文字水印
 
-##语法
+## 语法
+
 ```
 unsigned int AnnotateImage( Image *image, DrawInfo *draw_info );
 ```
 
-###DrawInfo
+### DrawInfo
+
 [DrawInfo](http://www.graphicsmagick.org/api/types.html#drawinfo)数据结构用来支持通过使用绘图命令给图片注释
 主要方法
 
@@ -32,7 +35,7 @@ DrawImage( Image *image, const DrawInfo *draw_info )|在当前图上画东西，
 
 MD，连个Sample的搜不到，半路出家玩图片的哪懂那些专业术语，想杀人XXXXXXXXXXXX
 
-##参数说明：
+## 参数说明：
 
 参数 |类型 |说明
 ----- |-------- |--------
@@ -41,12 +44,11 @@ gravity|(NorthWest,North,NorthEast, West,Center,East, SouthWest,South,SouthEast)
 pointsize|double|渲染文字大小
 geometry|char *|文字编码后所占矩形的大小，sample "+100+100"
 
-##案例
+## 案例
 代码[annotate.cpp](https://github.com/AndreMouche/GraphicsStudy/blob/master/GraphicsMagicUsage/annotate.cpp)
 效果：
 
 <img src="https://raw.githubusercontent.com/AndreMouche/GraphicsStudy/master/GraphicsMagicUsage/data/annotate.jpg" alt="annotate.jpg" title="annotate.jpg" width="400" />
-
 
 
 

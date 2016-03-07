@@ -5,10 +5,11 @@ keywords: ["c", "linux"]
 description: ""
 category: "linux"
 tags: ["linux"]
-
+comments: true
 ---
 
-##目录
+## 目录
+ 
  <div id="wmd-preview-section-24" class="wmd-preview-section preview-content">
 
 </div><div id="wmd-preview-section-11400" class="wmd-preview-section preview-content">
@@ -30,12 +31,13 @@ tags: ["linux"]
 </div></div>
 
 
-#Linux下C类程序性能测试必备技能
+# Linux下C类程序性能测试必备技能
 
-##背景
+## 背景
+
 最近在玩c++的server端程序的开发，搞完后进行性能测试的时候，发现一晚上统计的内存一直程序上涨，用vargind工具扫了半天愣是没看到个definitely lost,想着项目月底要上线，瞬间慌乱无比，抓来性能测试小妹一顿敲诈勒索，小妹轻松搞定并传授相关技能如下。
 
-##使用gdb调试程序
+## 使用gdb调试程序
 
 * 正常启动 程序 exampleServer
 *  ps获取进程号，若该程序涉及到多个子进程，则根据进程关系找到主进程。
@@ -59,7 +61,7 @@ Ctrl＋C 停止服务
 p 变量名  －－查看变量信息
 ```
 
-##free查看当前内存使用情况
+## free查看当前内存使用情况
 free 是个很好的命令
 
 ```
@@ -73,7 +75,7 @@ Swap:         4094          0       4094
 注意，used包含了cached部分
  我的问题就是出现在这里，由于程序运行过程中会产生大量的临时文件，虽然临时文件很快被删除，但还是会进入缓存，故运行过程中，缓存空间会持续上涨。在统计的时候，直接统计了used部分，故会持续上涨。这类情况对于本程序来说，属于正常现象，当缓存涨到一定程度，自然会持平，也就是说并不存在所谓的内存泄漏问题（测试小妹给力啊）。
 
-##查看句柄数
+## 查看句柄数
 
 查看进程打开的fd个数
 

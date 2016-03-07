@@ -5,11 +5,12 @@ keywords: ["nginx"]
 description: "nginx"
 category: "nginx"
 tags: ["nginx"]
-
+auther: Shilry
+comments: true
 ---
 
 
-##Nginx 介绍（译文III--Nginx配置结构）
+## Nginx 介绍（译文III--Nginx配置结构）
 
 * 原文 [nginx](http://www.aosabook.org/en/nginx.html)
 * 作者 [Andrew Alexeev](http://www.aosabook.org/en/intro2.html#alexeev-andrew)
@@ -25,7 +26,7 @@ tags: ["nginx"]
 </li>
 </ul>
 
-##Nginx配置结构
+## Nginx配置结构
 Nginx配置系统的设计灵感来自于Igor Sysoev的Apache使用经验。他的主要观点是认为一个可扩展的配置管理系统是web服务器最基本要素。对于一个由大量虚拟服务器（virtual servers）、目录（durectirues）、位置（location）、数据集（datasets）组成的大型复杂配置而言，维护过程中很容易遇到扩展性问题。在一个相对较大的web设置、启动、管理工作，如果没有进行适当的设置，对于应用层和系统工程师而言，这无疑将是一个噩梦。
 
 所以，nginx的配置结构按照如下两点为目标进行设计：

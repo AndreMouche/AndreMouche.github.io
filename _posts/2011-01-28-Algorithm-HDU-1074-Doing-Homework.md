@@ -5,20 +5,24 @@ keywords: ["algorithm", "POJ"]
 description: "HDU 1074 Doing Homework 解题报告"
 category: "algorithm"
 tags: ["ACM","DP"]
-
+comments: true
 ---
 [HDU 1074 Doing Homework ](http://acm.hdu.edu.cn/showproblem.php?pid=1074)
 
-#算法核心：
+# 算法核心：
+
 状态压缩DP
-#大意：
+
+# 大意：
+
 有n门课程作业，每门作业的截止时间为D,需要花费的时间为C，若作业不能按时完成，每超期1天扣1分。
 这n门作业按课程的字典序先后输入
 问完成这n门作业至少要扣多少分，并输出扣分最少的做作业顺序
 
 PS:达到扣分最少的方案有多种，请输出字典序最小的那一组方案
 
-#分析：
+# 分析：
+
 n<=15，由题意知，只需对这n份作业进行全排列，选出扣分最少的即可。
 用一个二进制数存储这n份作业的完成情况，第1.。。。n个作业状况分别
 对应二进制数的第0，1.。。。。,n-1位则由题意，故数字上限为2^n
@@ -35,9 +39,9 @@ n<=15，由题意知，只需对这n份作业进行全排列，选出扣分最�
 
 最后dp[2^n-1].reduced即为最少扣分，课程安排可递归的输出
 
-#Answer
+# Answer
 
-```c++
+```
 
 #include<stdio.h>
 #include<string.h>

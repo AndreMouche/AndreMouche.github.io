@@ -5,7 +5,7 @@ keywords: ["algorithm", "POJ"]
 description: "POJ 3067 Japan 解题报告"
 category: "algorithm"
 tags: ["ACM","dp"]
-
+comments: true
 ---
 
 POJ 3067 Japan【一维树状数组】

@@ -5,12 +5,14 @@ keywords: ["algorithm", "算法设计与分析"]
 description: "字典序问题解题报告"
 category: "algorithm"
 tags: ["ACM"]
-
+comments: true
 ---
 
 
 # 字典序问题
-##Description
+
+## Description
+
 在数据加密和数据压缩中常需要对特殊的字符串进行编码。给定的字母表A由26 个小
 写英文字母组成A={a,b,…,z}。该字母表产生的升序字符串是指字符串中字母按照从左到右
 出现的次序与字母在字母表中出现的次序相同，且每个字符最多出现1次。例如，a,b,ab,bc,xyz
@@ -27,20 +29,23 @@ tags: ["ACM"]
 输出共有k行，每行对应于一个字符串的编码。
 
 
-##Sample Input
+## Sample Input
+
 ```
 2
 a
 b
 ```
 
-##Sample Output
+## Sample Output
+
 ```
 1
 2
 ```
 
-##Answer
+## Answer
+
 ```
 
 #include<stdio.h>     
