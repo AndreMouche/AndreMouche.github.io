@@ -1,0 +1,119 @@
+# Site settings
+title: Shirly Blog
+SEOTitle: Shirly's Blog  | Shirly Blog
+header-img: img/home-bg.jpg
+email: axuelianwu@gmail.com
+description: "那些年，我们一起扯过的皮打过的架 | 这里是 Shirly 的个人博客，与你一起嗨皮玩代码。"
+keyword: "Shirly, @Shirly, Shirly的博客, Shirly's Blog, 博客, 个人网站, 互联网,后端，扯皮, 俊华的男朋友"
+url: "http://andremouche.github.io/"              # your host, for absolute URL
+baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
+
+
+
+# SNS settings
+RSS: false
+weibo_username:     happyprogrammer
+#zhihu_username:     huxpro
+github_username:    andremouche
+#twitter_username:  huxpro
+douban_username:   AndreMouche
+#facebook_username:  andremouche
+
+
+
+# Build settings
+# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
+highlighter: rouge
+#permalink: pretty
+permalink: /:categories/:title.html
+paginate: 10
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
+
+
+
+# Gems
+# from PR#40, to support local preview for Jekyll 3.0
+gems: [jekyll-paginate]
+
+
+
+# Markdown settings
+# replace redcarpet to kramdown,
+# although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
+# document: http://jekyllrb.com/docs/configuration/#kramdown
+#markdown: kramdown
+#kramdown:
+#  input: GFM                            # use Github Flavored Markdown !important
+
+highlighter: rouge
+markdown: kramdown
+kramdown:
+#  input:  GFM
+#  use_coderay: true 
+  input: GFM
+  extensions:
+    - autolink
+    - footnotes
+    - smart
+  use_coderay: true
+  syntax_highlighter: rouge
+  coderay:
+    coderay_line_numbers:  nil
+
+
+# Disqus settings
+disqus_username: shirly
+
+# Duoshuo settings
+duoshuo_username: huxblog
+# Share component is depend on Comment so we can NOT use share only.
+duoshuo_share: true                     # set to false if you want to use Comment without Sharing
+
+
+
+
+# Analytics settings
+# Baidu Analytics
+ba_track_id: 4cc1f2d8f3067386cc5cdb626a202900
+# Google Analytics
+ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
+ga_domain: huangxuan.me
+
+
+
+# Sidebar settings
+sidebar: true                           # whether or not using Sidebar.
+sidebar-about-description: "爬爬小山，看看黑书，敲敲代码，泡泡帅哥。小鲜肉这么多，让我怎么逗得完。"
+sidebar-avatar: /img/avatar-hux.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+
+
+
+# Featured Tags
+featured-tags: true                     # whether or not using Feature-Tags
+featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
+
+
+
+# Friends
+friends: [
+    {
+        title: "Tom锅锅的博客",
+        href: "http://work-jlsun.github.io/"
+    },
+    {
+        title : "道哥的博客",
+        href : "http://blog.lidaobing.com/"
+        },
+    {
+        title: "干爹的小金屋",
+        href: "http://jxqstu.github.io/"
+    },{
+        title : "基友的博客",
+        href : "http://senarukana.github.io/"
+    },{
+        title: "基友的博客",
+        href: "http://openinx.github.io/"
+    }
+
+]
