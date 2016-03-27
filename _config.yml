@@ -66,7 +66,7 @@ kramdown:
 disqus_username: shirly
 
 # Duoshuo settings
-duoshuo_username: huxblog
+duoshuo_username: shirly
 # Share component is depend on Comment so we can NOT use share only.
 duoshuo_share: true                     # set to false if you want to use Comment without Sharing
 
