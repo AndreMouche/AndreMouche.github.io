@@ -28,10 +28,29 @@ layout: page
   {% endfor %}
 
 <div class="post-footer">
+<div class="column-full">
 
-Status API Training Shop Blog About
+  {% if paginator.total_pages > 1 %}
+    <div class="pagination dark">
+    {% if paginator.previous_page %}
+      <a class="page" href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}"><</a>
+    {% endif %}
 
-  <div class="column-full">
-    <h3><a href="{{ '/archive.html' | prepend: site.baseurl | prepend: site.url }}">Blog archive</a></h3>
+    {% for page in (1..paginator.total_pages) %}
+      {% if page == paginator.page %}
+        <a class="page active">{{ page }}</a>
+      {% elsif page == 1 %}
+        <a class="page" href="{{ site.url }}">{{ page }}</a>
+      {% else %}
+      <a class="page" href="{{ site.url}}/page{{page}}">{{ page }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if paginator.next_page %}
+      <a class="page" href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">></a>
+    {% endif %}
+    </div>
+  {% endif %}
+
   </div>
 </div>
