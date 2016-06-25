@@ -15,7 +15,7 @@
                 </div>
                 <ul>
                   {% for tag in page.tags %}
-                    <li><a href="{{ site.url | append:site.baseurl }}/tag/{{ tag }}">{{ tag }}</a></li>
+                    <li><a href="{{ site.url | append:site.baseurl }}/tags#{{ tag }}-ref">{{ tag }}</a></li>
                   {% endfor %}
                 </ul>
               </div>

@@ -6,8 +6,6 @@ description: "Hey, this is Shirly Wu."
 
 ## 个人简介
 
-<img src="{{ site.url}}/img/about.jpg" > 
-<br>
 <p>Hi,我叫<code>Shirly</code>.</p>
 
 <p>我呢，崇尚自由，热爱冒险，喜欢剥削，迷恋topcoder,曾因为对黑客男神的极度仰慕崇拜而学习编程哈。</p>

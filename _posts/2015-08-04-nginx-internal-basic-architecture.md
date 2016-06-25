@@ -15,27 +15,16 @@ comments: true
 * 参考材料：《深入理解nginx模块开发与架构设计》 第三部分，深入Nginx-nginx基础架构
 
 # 目录
- <div id="wmd-preview-section-24" class="wmd-preview-section preview-content">
-
-</div><div id="wmd-preview-section-11400" class="wmd-preview-section preview-content">
-
-<div><div class="toc"><div class="toc">
-<ul>
-<li><a href="#源码目录结构">源码目录结构 </a></li>
-<li><a href="#nginx的架构设计">Nginx的架构设计</a><ul>
-<li><a href="#优秀的模块化设计">优秀的模块化设计</a></li>
-<li><a href="#事件驱动架构">事件驱动架构</a></li>
-<li><a href="#请求的多阶段异步处理">请求的多阶段异步处理</a></li>
-<li><a href="#管理进程、多工作进程的设计">管理进程、多工作进程的设计</a></li>
+ <ul>
+<li>源码目录结构 </li>
+<li>Nginx的架构设计</li>
+ <ul>
+<li>优秀的模块化设计</li>
+<li>事件驱动架构</li>
+<li>请求的多阶段异步处理</li>
+<li>管理进程、多工作进程的设计</li>
 </ul>
-</li>
 </ul>
-</li>
-</ul>
-</div>
-</div>
-</div></div>
-
 
 ## 源码目录结构 
 ```

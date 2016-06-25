@@ -29,11 +29,11 @@ comments: true
 ## 本章目录
 
 <ul>
-<li><a href="#概述">概述</a></li>
-<li><a href="#为什么高并发很重要？">为什么高并发很重要？</a></li>
+<li>概述</li>
+<li>为什么高并发很重要？</li>
 <ul>
-<li><a href="#apache不适用了吗？">Apache不适用了吗？</a></li>
-<li><a href="#使用nginx有更多优势吗？">使用nginx有更多优势吗？</a></li>
+<li>Apache不适用了吗？</li>
+<li>使用nginx有更多优势吗？</li>
 </ul>
 </li>
 </ul>

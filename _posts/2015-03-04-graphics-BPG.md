@@ -12,26 +12,26 @@ comments: true
 
 ## 目录 
 
-<div><div class="toc"><div class="toc">
+
 <ul>
-<li><a href="#简介">简介</a></li>
-<li><a href="#工具">工具</a><ul>
-<li><a href="#兼容性">兼容性</a></li>
-<li><a href="#安装">安装</a></li>
-<li><a href="#效果示例">效果示例</a></li>
+<li>简介</li>
+<li>工具 
+<ul>
+<li>兼容性</li>
+<li>安装</li>
+<li>效果示例</li>
 </ul>
 </li>
-<li><a href="#性能">性能</a><ul>
-<li><a href="#bpg编解码性能">BPG编解码性能</a></li>
-<li><a href="#与webp对比">与WEBP对比</a></li>
+
+<li>性能
+<ul>
+<li>BPG编解码性能</li>
+<li>与WEBP对比</li>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
-</div>
-</div>
-</div>
+
+
 
 本文基于libbpg-0.9.5展开调研
 
