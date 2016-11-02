@@ -35,13 +35,13 @@ Spanner由一个zone的集合组成，每个zone是一个Bigtable服务集群部
 
 
 
-[Figure 1]展示了一个Spanner universe的服务器。
+[Figure 1]展示了一个Spanner universe的服务器，简要介绍如下：
 
-* 一个zone由一个zonemaster和100-上千台spanserver。zonemaster把数据分配给spanservers,spanserver把为客户端提供数据。
+* 一个zone由一个zonemaster和100-上千台spanserver。zonemaster把数据分配给spanservers,spanserver为客户端提供数据。
 * location proxy用来帮助客户端定位为其提供数据的spanserver。
 * universe master和placement driver目前都只有一个
 * universe master主要为一个管理zone的控制台，它显示所有zone的状态信息，用于互动调试。
-* placement driver 用于处理zone之前分钟级别的数据自动移动。
+* placement driver 用于处理zone之间分钟级别的数据自动移动。
 * placement driver 周期性地与spanserver交互，为满足被更新的副本限制或负载均衡，发现需要移动的数据
 
 由于篇幅限制，我们将只介绍spanserver的相关细节。
