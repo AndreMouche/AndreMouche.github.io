@@ -53,7 +53,8 @@ Spanner由一个zone的集合组成，每个zone是一个Bigtable服务集群部
 <img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/spanner/spanner2.jpg?raw=true" alt="spanner_fig_1" title="ngx_module_t.jpg" width="600" />
 
 
-#####  Tablet
+
+####  Tablet
 
 在底部，每个spannserver负责管理100-1000称为tablet的数据结构实例:
 
