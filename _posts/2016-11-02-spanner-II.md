@@ -48,7 +48,7 @@ Spanner由一个zone的集合组成，每个zone是一个Bigtable服务集群部
 
 ### 2.1 Spanserver软件栈
 
-本节将专注于spanserver的实现，描述基于Bigtable,Spanner如何实现复制和分布式事务。软件栈信息显示如Figure 2。
+本节将专注于spanserver的实现，描述基于Bigtable,Spanner如何实现复制和分布式事务。软件栈信息显示如[Figure 2]。
 
 <img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/spanner/spanner2.jpg?raw=true" alt="spanner_fig_1" title="ngx_module_t.jpg" width="600" />
 
