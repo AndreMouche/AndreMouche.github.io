@@ -101,6 +101,9 @@ Paxos状态机用来对一系列复制映射的持久化。
 
 在一系列key-value映射的上层，Spanner实现了被称为目录(directory)的bucket抽象，一个目录为拥有公共前缀的连续key集合（选择directory作为术语为历史偶然，实际上bucket可能更专业）。我们将在2.3节介绍前缀的由来。对目录的支持，使得应用可以通过对key的细分来控制数据的位置（locality）。
 
+
+<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/spanner/spanner3.jpg?raw=true" alt="spanner_fig_3" title="ngx_module_t.jpg" width="600" />
+
 一个目录是数据放置的基本单元。同一个目录下的所有数据，拥有相同的副本配置。如图3所示，当数据在Paxos集群间迁移时，是一个目录一个目录地移动的。Spanner可能在以下情况下移动目录：
 
 * 减轻一个paxos集群的压力
