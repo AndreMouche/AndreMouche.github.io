@@ -95,3 +95,17 @@ Paxos状态机用来对一系列复制映射的持久化。
 * 事务管理员用来实现一个participant leader（参与者领导），组里面的其它replica则被称为participant slave(参与者随从)。
 * 如果一个事务只包含了一个paxos组（大部分事务都是如此），由于lock table和paxos一起已经提供了事务性，所以可以忽略transaction manager。
 * 如果一个事务包含了多个paxos组，这些组的leader将协调执行两阶段提交。其中一个参与群会被选为coordinator leader:它的participant leader 被引用为coordinator leader,它的slaves则被称为coordinator slaves. 每个transaction manager的状态被存放于底层paxos组中（故被副本化了）
+
+
+### 2.2 Directories and Placement(目录和放置)
+
+在一系列key-value映射的上层，Spanner实现了被称为目录(directory)的bucket抽象，一个目录为拥有公共前缀的连续key集合（选择directory作为术语为历史偶然，实际上bucket可能更专业）。我们将在2.3节介绍前缀的由来。对目录的支持，使得应用可以通过对key的细分来控制数据的位置（locality）。
+
+一个目录是数据放置的基本单元。同一个目录下的所有数据，拥有相同的副本配置。如图3所示，当数据在Paxos集群间迁移时，是一个目录一个目录地移动的。Spanner可能在以下情况下移动目录：
+
+* 减轻一个paxos集群的压力
+* 将经常被一起访问的目录放在同一个集群里
+* 将目录移动到离它访问者最近的集群上
+
+
+客户端在操作时，目录也可以移动（在线移动）。一个50MB的目录预计可在几秒内完成移动。
