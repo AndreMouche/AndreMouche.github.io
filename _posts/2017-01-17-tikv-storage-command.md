@@ -61,6 +61,7 @@ comments: true
 
 ### Scan
 
+
 ```    
     Scan {
         ctx: Context,
@@ -69,7 +70,8 @@ comments: true
         start_ts: u64,
         options: Options,
     }
- ```
+``` 
+ 
  
  * 获取版本号为start_ts的，从start_key开始的limit个key的信息
  * Options里可指定是否只获取key的scan选项
@@ -80,6 +82,7 @@ TODO
  
 ### Prewrite
 
+
 ``` 
     Prewrite {
         ctx: Context,
@@ -89,6 +92,7 @@ TODO
         options: Options,
     }
 ``` 
+
 
 * 事务两阶段提交
 
