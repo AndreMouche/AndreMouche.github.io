@@ -251,9 +251,11 @@ store将handler指为StorageHandle 具体处理指令入口为：/src/storage/tx
 	2. 获取数据reader.get(key).    
 
 * MvccReader get(key,ts)
+<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/tidb/tikv_get_key_ts.png?raw=true" alt="tikv_get_key_ts.png" title="tikv_get_key_ts.jpg" width="600" />
 
 	1. 获取当前key的lock，如果当前key的lock存在（即如果当前key－lock的时间发生在当前ts之前)，返回错误
 	2. 循环执行以下过程，直到从write  CF 中获取符合条件的key的ts--(commit_ts,write)，返回default CF中对应的真实数据:
+
       
       * 使用get(key,ts)从write表中获取符合条件commit记录（commit_ts,write）
 	  * 若未在write Column Family中找到对应记录，则返回数据不存在。
@@ -268,6 +270,9 @@ notify收到ReadFinished请求，执行on_read_finished:
 1. 从缓存中移除当前cid对应的环境信息
 2. 如果存在next command,继续往下处理；否则，带数据执行回调
 3. 释放当前请求相关的内存锁 release_lock:释放所有锁，并尝试唤醒所有相关的锁当前的队首请求
+
+
+
 
 
 
