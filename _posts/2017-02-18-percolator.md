@@ -11,7 +11,6 @@ comments: true
 # Google Percolator 的事务模型
  
 [参考论文](https://www.usenix.org/legacy/event/osdi10/tech/full_papers/Peng.pdf)
-		/images/
 ##  Percolator 简介
 
 Percolator是由Google公司开发的、为大数据集群进行增量处理更新的系统，主要用于google网页搜索索引服务。使用基于Percolator的增量处理系统代替原有的批处理索引系统后，Google在处理同样数据量的文档时，将文档的平均搜索延时降低了50%。
