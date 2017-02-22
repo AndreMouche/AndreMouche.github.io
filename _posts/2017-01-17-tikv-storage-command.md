@@ -185,6 +185,8 @@ Rollback(key,start_ts):
     ScanLock { ctx: Context, max_ts: u64 },
     ``` 
     
+    获取lock时间小于等于max_ts的所有锁的详细信息
+    
 ### ResolveLock
 
     ``` 
@@ -195,7 +197,14 @@ Rollback(key,start_ts):
         scan_key: Option<Key>,
         keys: Vec<Key>,
     }
+     // Scan the locks with timestamp `start_ts`, then either commit them if the command has
+     // commit timestamp populated or rollback otherwise.
+
     ``` 
+    
+    1. 当keys为空时，为read操作，从lock中根据scan_key作为start_key获取一批ts=start_ts的锁，带结果转发该批数据。
+    2. 收到keys有数据的请求，若commit_ts存在，则对当前所有key执行commit操作；否则，对所有key执行rollbak操作。
+    3.执行完2继续执行1，循环，直到获取不到符合条件的key为止。
     
 ### Gc
    
@@ -208,10 +217,16 @@ Rollback(key,start_ts):
     }
     ```
     
+### 执行过程
+
+1. 执行以下过程，直到所有数据扫描完毕,start_key=none
+2. 从
+    
 ### RawGet    
 ``` 
     RawGet { ctx: Context, key: Key },
 ```
+
 
 
 

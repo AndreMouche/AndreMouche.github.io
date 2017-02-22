@@ -11,6 +11,7 @@ comments: true
 # Google Percolator 的事务模型
  
 [参考论文](https://www.usenix.org/legacy/event/osdi10/tech/full_papers/Peng.pdf)
+
 ##  Percolator 简介
 
 Percolator是由Google公司开发的、为大数据集群进行增量处理更新的系统，主要用于google网页搜索索引服务。使用基于Percolator的增量处理系统代替原有的批处理索引系统后，Google在处理同样数据量的文档时，将文档的平均搜索延时降低了50%。
@@ -144,7 +145,7 @@ Prewrite是事务两阶段提交的第一步，其从Oracle获取代表当前物
  `write` 记录着key的提交记录，当客户端读取一个`key`时，会从write表中读取`key`所对应数据在`data`列中的存储位置，然后从`data`列中读取真正的数据。同时，一旦`primary` 被提交成功后，整个事务对外就算提交成功了。
  
  
- ### Get
+### Get
  
  ![get.jpg](/images/percolator/get.jpg)
  
@@ -153,7 +154,7 @@ Prewrite是事务两阶段提交的第一步，其从Oracle获取代表当前物
  3. 根据步骤2获取的内容，从`data`中获取到相应的数据并返回。
 
  
- ### 异常处理（异步清理锁）
+### 异常处理（异步清理锁）
  
  若客户端在`Commit`一个事务时，出现了异常，`Prepare` 时产生的锁会被留下。为避免将新事务`hang`住，Percolator必须清理这些锁。
  
