@@ -78,23 +78,25 @@ ${key}_${start_ts} => ${value}
 一个读取过程如下：
 
 1. 读取 key 时，若发现没有冲突的锁，则返回对应值，结束。
-2. 若发现了锁，若当前锁对应的 key 为 `primary`, 若锁尚未超时，等待。若锁已超时，Rollback 他并获取上一版本信息返回，结束。
-3. 若发现了锁，若当前锁对应的 `key` 为 `secondary`, 则根据其锁里指定的 `primary` 找到 `primary`所在信息，根据其决定当前事务是否提交成功，返回具体值。
+2. 若发现了锁，且当前锁对应的 key 为 `primary`： 若锁尚未超时，等待。若锁已超时，Rollback 它并获取上一版本信息返回，结束。
+3. 若发现了锁，且当前锁对应的 `key` 为 `secondary`, 则根据其锁里指定的 `primary` 找到 `primary`所在信息，根据 `primary` 的状态决定当前事务是否提交成功，返回对应具体值。
 
 ## TIDB 事务处理流程
 
 <img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/img/txn_in_tidb/2pc.png?raw=true" width="600" />
 
+注意：所有涉及重新获取 tso 重启事务的两阶段提交的地方，会先检查当前事务是否可以满足重试条件：只有单条语句组成的事务才可以重新获取tso作为start_ts。
+
 1. `client` 向 `tidb` 发起开启事务 `begin`
 2. `tidb` 向 `pd` 获取 `tso` 作为当前事务的 `start_ts`
 3. `client` 向 `tidb` 执行以下请求：
-	* 读操作，从 `tikv` 读取.
+	* 读操作，从 `tikv` 读取版本 `start_ts` 对应具体数据.
 	* 写操作，写入 `memory` 中。
 4. `client` 向 `tidb` 发起 `commit` 提交事务请求
 5. `tidb` 开始两阶段提交。
 6. `tidb` 按照 `region` 对需要写的数据进行分组。
-7. `tidb` 开始 `prewrite` 操作：向所有涉及 `region` 并发执行 `prewrite` 请求。若其中某个`prewrite` 失败，根据错误类型决定处理方式：
-	* `KeyIsLock` 则尝试 `Resolve Lock` 后，若成功，则重试当前 region 的 `prewrite`[步骤7]。否则，重新获取 `tso` 作为 `start_ts ` 启动 2pc 提交（步骤5）。
+7. `tidb` 开始 `prewrite` 操作：向所有涉及改动的 `region` 并发执行 `prewrite` 请求。若其中某个`prewrite` 失败，根据错误类型决定处理方式：
+	* `KeyIsLock`：尝试 `Resolve Lock` 后，若成功，则重试当前 region 的 `prewrite`[步骤7]。否则，重新获取 `tso` 作为 `start_ts ` 启动 2pc 提交（步骤5）。
 	* `WriteConfict` 有其它事务在写当前 `key`, 重新获取 `tso` 作为 `start_ts ` 启动 2pc 提交（步骤5）。
 	* 其它错误，向 `client` 返回失败。
 8. `tidb` 向 `pd` 获取 tso 作为当前事务的 `commit_ts`。
