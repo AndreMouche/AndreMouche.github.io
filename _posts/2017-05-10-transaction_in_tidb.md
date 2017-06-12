@@ -11,46 +11,14 @@ comments: true
 
 # Transaction in TiDB
 
+`TiDB` 的事务模型参考了 [Percolator](https://www.usenix.org/legacy/event/osdi10/tech/full_papers/Peng.pdf) 论文，Percolator 事务模型详见上一篇文章-[Google Percolator 的事务模型](http://andremouche.github.io/transaction/percolator.html)
+
 本文将详细介绍事务在 `tidb` 中实现，主要内容包括
 
-* percolator 事务模型简介
-* 两阶段提交的实现
-* `tikv` 中事务相关的请求执行逻辑
-* `tidb` 事务如何做到 ACID
-
-
-## 基于 Percolator 的事务模型
-
-
-[参考论文](https://www.usenix.org/legacy/event/osdi10/tech/full_papers/Peng.pdf)
-
-Percolator 提供了跨行、跨表的、基于快照隔离的ACID事务。
-
-### Snapshop isolation
-
-Percolator 使用Bigtable的时间戳记维度实现了数据的多版本化.多版本化保证了快照的隔离级别，优点如下：
-
-* 对读操作：使得每个读操作都能够从一个带时间戳的稳定快照获取。
-* 对写操作，能很好的应对写写冲突：若事务A和B并发去写一个同一个元素，最多只有一个会提交成功。
-
-<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/img/txn_in_tidb/s_1.jpg?raw=true" width="600" />
-
-如图，基于快照隔离的事务，开始于一个开始时间戳`a start timestamp`（图内为小空格）开始，结束于一个提交时间戳`a commit timestamp`（图内为小黑球）。本列包含以下信息：
-
-* 由于`Transaction 2`的开始时间戳`start timestamp`小于`Transaction 1`的提交时间戳`commit timestamp`,所以`Transaction 2` 不能看到 `Transaction 1` 的提交信息。
-* `Transaction 3` 可以看到`Transaction 2` 和 `Transaction 1` 的提交信息
-* `Transaction 1` 和 `Transaction 2` 并发执行：如果它们对同一项进行写入，至少有一个会失败。
-
-### 案例
-
-Bob 向 Joe 转账7元。该事务于`start timestamp =7` 开始，`commit timestamp=8` 结束。具体过程如下：
-
-1. 初始状态下，Joe的帐户下有10（首先查询`column write`获取最新时间戳数据,获取到`data@5`,然后从`column data`里面获取时间戳为`5`的数据，即`$10`），Bob的帐户下有2。 <img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/img/txn_in_tidb/t_1.jpg?raw=true" width="600" />
-2. 转账开始，使用`stat timestamp=7`作为当前事务的开始时间戳,通过写入`Column Lock`锁定Bob的帐户，并将Bob的锁作为本事务的`primary`,同时，将数据`7:$3`写入到`Column,data`列。<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/img/txn_in_tidb/t_2.jpg?raw=true" width="600" />
-3. 同样的，使用`stat timestamp=7`,锁定Joe的帐户，并将Joe改变后的余额写入到`Column,data`,当前锁作为`secondary`并存储一个指向`primary`的引用（当失败时，能够快速定位到`primary`锁，并根据其状态异步清理） <img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/img/txn_in_tidb/t_3.jpg?raw=true" width="600" />
-4. 事务带着当前时间戳`commit timestamp=8`进入commit阶段：删除primary所在的lock,并在write列中写入从提交时间戳指向数据存储的一个指针`commit_ts=>data @7`。至此，读请求过来时将看到Bob的余额为3。<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/img/txn_in_tidb/t_4.jpg?raw=true" width="600" />
-5. 依次在`secondary`项中写入`wirte`并清理锁，整个事务提交结束。在本例中，只有一个`secondary:Joe. `<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/img/txn_in_tidb/t_5.jpg?raw=true" width="600" />
-
+*  基本概念
+* `tidb` 中一致性事务的实现
+* `tikv` 中事务相关的接口逻辑
+* `tidb` 事务如何做到 `ACID`
 
 ## TIKV
 
@@ -69,14 +37,14 @@ pd 提供两大功能
 
 ### Columns in TIKV
 
- `tikv` 底层用  `raft+rocksdb` 组成的 `raft-kv` 作为存储引擎，具体落到 `rocksdb` 上的 `column` 有四个，除了一个用于维护 `raft` 集群的元数据外，其它 3 个皆为了保证事务的 mvcc, 分别为 `lock`, `write`, `default`，详情如下：
+ `tikv` 底层用  `raft+rocksdb` 组成的 `raft-kv` 作为存储引擎，具体落到 `rocksdb` 上的 `column` 有四个，除了一个用于维护 `raft` 集群的元数据外，其它 3 个皆为了保证事务的 `mvcc`, 分别为 `lock`, `write`, `default`，详情如下：
  
 #### Lock
 
 事务产生的锁，未提交的事务会写本项，会包含`primary lock`的位置。其映射关系为
 
 ```
-${key,start_ts}=>${primary_key,..etc}
+${key}=>${start_ts,primary_key,..etc}
 ```
 
 #### Write
@@ -96,6 +64,22 @@ ${key}_${commit_ts}=>${start_ts}
 ${key}_${start_ts} => ${value}
 ```
 
+## Primary
+
+`TiDB` 对于每个事务，会从涉及到改动的所有 `Key` 中选中一个作为当前事务的 `Primary Key`。 在最终提交时，以 `Primary` 提交是否成功作为整个事务是否执行成功的标识，从而保证了分布式事务的原子性。
+
+有了 `Primary key` 后，简单地说事务两阶段提交过程如下：
+
+1. 从当前事务涉及改动的 keys 选中一个作为 `primary key`, 剩余的则为 `secondary keys`
+2. 并行 `prewrite` 所有 `keys`。 这个过程中，所有 key 会在系统中留下一个指向 `primary key` 的锁。
+3. 第二阶段提交时，首先 `commit` primary key ,若此步成功，则说明当前事务提交成功。
+4. 异步并行 `commit secondary keys` 
+
+一个读取过程如下：
+
+1. 读取 key 时，若发现没有冲突的锁，则返回对应值，结束。
+2. 若发现了锁，若当前锁对应的 key 为 `primary`, 若锁尚未超时，等待。若锁已超时，Rollback 他并获取上一版本信息返回，结束。
+3. 若发现了锁，若当前锁对应的 `key` 为 `secondary`, 则根据其锁里指定的 `primary` 找到 `primary`所在信息，根据其决定当前事务是否提交成功，返回具体值。
 
 ## TIDB 事务处理流程
 
@@ -109,15 +93,16 @@ ${key}_${start_ts} => ${value}
 4. `client` 向 `tidb` 发起 `commit` 提交事务请求
 5. `tidb` 开始两阶段提交。
 6. `tidb` 按照 `region` 对需要写的数据进行分组。
-7. `tidb` 开始 `prewrute` 操作：向所有涉及 `region` 并发执行 `prewrite` 请求。若 `prewrite` 失败，则先执行 `rollback keys`,然后根据错误判断是否重试：
-	* `KeyIsLock` 则尝试 `Resolve Lock` 后，重新获取 `tso` 作为 `start_ts ` 启动 2pc 提交（步骤5）。
+7. `tidb` 开始 `prewrite` 操作：向所有涉及 `region` 并发执行 `prewrite` 请求。若其中某个`prewrite` 失败，根据错误类型决定处理方式：
+	* `KeyIsLock` 则尝试 `Resolve Lock` 后，若成功，则重试当前 region 的 `prewrite`[步骤7]。否则，重新获取 `tso` 作为 `start_ts ` 启动 2pc 提交（步骤5）。
 	* `WriteConfict` 有其它事务在写当前 `key`, 重新获取 `tso` 作为 `start_ts ` 启动 2pc 提交（步骤5）。
 	* 其它错误，向 `client` 返回失败。
 8. `tidb` 向 `pd` 获取 tso 作为当前事务的 `commit_ts`。
-9. `tidb` 开始 `commit`:`tidb` 向 `primary` 所在 `region` 发起 `commit`，然后 `tidb` 向 `tikv` 异步并发向剩余 `region` 发起 `commit`。 若 `commit primary` 失败，则先执行 `rollback keys`,然后根据错误判断是否重试:
+9. `tidb` 开始 `commit`:`tidb` 向 `primary` 所在 `region` 发起 `commit`。 若 `commit primary` 失败，则先执行 `rollback keys`,然后根据错误判断是否重试:
     * `LockNotExist` 重新获取 `tso` 作为 `start_ts ` 启动 2pc 提交（步骤5）。
     * 其它错误，向 `client` 返回失败。
-10. `tidb` 向 `client` 返回事务提交成功信息。
+10. `tidb` 向 `tikv` 异步并发向剩余 `region` 发起 `commit`。
+11. `tidb` 向 `client` 返回事务提交成功信息。
 
 
 ## TiKV 事务处理细节
