@@ -110,7 +110,7 @@ ${key,start_ts} => ${value}
 
 银行转账，Bob 向 Joe 转账7元。该事务于`start timestamp =7` 开始，`commit timestamp=8` 结束。具体过程如下：
 
-1. 初始状态下，Joe的帐户下有10（首先查询`column write`获取最新时间戳数据,获取到`data@5`,然后从`column data`里面获取时间戳为`5`的数据，即`$10`），Bob的帐户下有2。![t_1.jpg](/images/percolator/t_1.jpg)
+1. 初始状态下，Bob 的帐户下有10（首先查询`column write`获取最新时间戳数据,获取到`data@5`,然后从`column data`里面获取时间戳为`5`的数据，即`$10`），Joe 的帐户下有2。![t_1.jpg](/images/percolator/t_1.jpg)
 2. 转账开始，使用`stat timestamp=7`作为当前事务的开始时间戳，将Bob选为本事务的`primary`，通过写入`Column Lock`锁定Bob的帐户，同时将数据`7:$3`写入到`Column,data`列。![t_2.jpg](/images/percolator/t_2.jpg)
 3. 同样的，使用`stat timestamp=7`，锁定Joe的帐户，并将Joe改变后的余额写入到`Column,data`,当前锁作为`secondary`并存储一个指向`primary`的引用（当失败时，能够快速定位到`primary`锁，并根据其状态异步清理）![t_3.jpg](/images/percolator/t_3.jpg)
 4. 事务带着当前时间戳`commit timestamp=8`进入commit阶段：删除primary所在的lock，并在write列中写入从提交时间戳指向数据存储的一个指针`commit_ts=>data @7`。至此，读请求过来时将看到Bob的余额为3。![t_4.jpg](/images/percolator/t_4.jpg) 
