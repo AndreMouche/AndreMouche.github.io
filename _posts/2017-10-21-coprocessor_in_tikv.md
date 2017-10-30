@@ -9,7 +9,7 @@ comments: true
 ---
 
 
-# Coprocessor in TiDB
+## 概要
 
 `TiDB` 的 `Coprocessor`  概念灵感来自于 HBase, 目前 TiDB 中的实现类比于 HBase 中 Coprocessor 的 Endpoint 部分， 有点像 mysql 中的存储过程。 简单的说，就是在查询过程中，将部分计算过程下推到各个 Region 上进行。 
 
@@ -46,7 +46,7 @@ comments: true
 
 ## Table 数据存储格式
 
-    TiDB 将一个查询操作组织成子任务的形式下发到 TiKV, 以充分利用 TiKV 的计算资源。 TiKV 在计算过滤过程中，便涉及到对数据的存储方式。
+ TiDB 将一个查询操作组织成子任务的形式下发到 TiKV, 以充分利用 TiKV 的计算资源、减少不必要的网络传输。 TiKV 在计算过滤过程中，便涉及到了对数据的存储方式。
     
 对于 TiDB 而言， TiKV 是一个分布式 KV 存储引擎。 TiDB 以行存的方式，将数据转换成 (Key,Value) 存储到 TiKV 上。
 目前 table 的数据主要会被组织成两种形式的 (key, value):
@@ -276,7 +276,11 @@ message Expr {
 
 ```
 
-目前支持的表达式主要分为以下三种：
+目前支持的表达式主要分为以下三种
+
+* Constant
+* ColumnRef
+* ScalarFunc
 
 #### 常量
 
