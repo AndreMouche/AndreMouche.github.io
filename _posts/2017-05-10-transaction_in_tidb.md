@@ -64,28 +64,28 @@ ${key}_${commit_ts}=>${start_ts}
 ${key}_${start_ts} => ${value}
 ```
 
-## Primary
+## Primary Key
 
-`TiDB` 对于每个事务，会从涉及到改动的所有 `Key` 中选中一个作为当前事务的 `Primary Key`。 在最终提交时，以 `Primary` 提交是否成功作为整个事务是否执行成功的标识，从而保证了分布式事务的原子性。
+`TiDB` 对于每个事务，会从涉及到改动的所有 `Key` 中选中一个作为当前事务的 `Primary Key`，事务的状态将保存在这个 `Key` 上。 在最终提交时，以 `Primary` 提交是否成功作为整个事务是否执行成功的标识，从而保证了分布式事务的原子性。
 
 有了 `Primary key` 后，简单地说事务两阶段提交过程如下：
 
 1. 从当前事务涉及改动的 keys 选中一个作为 `primary key`, 剩余的则为 `secondary keys`
-2. 并行 `prewrite` 所有 `keys`。 这个过程中，所有 key 会在系统中留下一个指向 `primary key` 的锁。
+2. 并行 `prewrite` 所有 `keys`。 这个过程中，所有 `key` 会在系统中留下一个指向 `primary key` 的锁。
 3. 第二阶段提交时，首先 `commit` primary key ,若此步成功，则说明当前事务提交成功。
 4. 异步并行 `commit secondary keys` 
 
 一个读取过程如下：
 
-1. 读取 key 时，若发现没有冲突的锁，则返回对应值，结束。
-2. 若发现了锁，且当前锁对应的 key 为 `primary`： 若锁尚未超时，等待。若锁已超时，Rollback 它并获取上一版本信息返回，结束。
+1. 读取 `key` 时，若发现没有冲突的锁，则返回对应值，结束。
+2. 若发现了锁，且当前锁对应的 `key` 为 `primary`： 若锁尚未超时，等待。若锁已超时，`Rollback` 它并获取上一版本信息返回，结束。
 3. 若发现了锁，且当前锁对应的 `key` 为 `secondary`, 则根据其锁里指定的 `primary` 找到 `primary`所在信息，根据 `primary` 的状态决定当前事务是否提交成功，返回对应具体值。
 
 ## TIDB 事务处理流程
 
 <img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/img/txn_in_tidb/2pc.png?raw=true" width="600" />
 
-注意：所有涉及重新获取 tso 重启事务的两阶段提交的地方，会先检查当前事务是否可以满足重试条件：只有单条语句组成的事务才可以重新获取tso作为start_ts。
+注意：所有涉及重新获取 tso 重启事务的两阶段提交的地方，会先检查当前事务是否可以满足重试条件：只有单条语句组成的事务才可以重新获取 tso 作为 start_ts。
 
 1. `client` 向 `tidb` 发起开启事务 `begin`
 2. `tidb` 向 `pd` 获取 `tso` 作为当前事务的 `start_ts`
@@ -113,11 +113,11 @@ ${key}_${start_ts} => ${value}
 
 <img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/img/txn_in_tidb/prewrite.png?raw=true" width="600" />
 
-Prewrite是事务两阶段提交的第一步，其从`pd`获取代表当前物理时间的全局唯一时间戳作为当前事务的 `start_ts`，尝试对所有被写的元素加锁(为应对客户端故障，`tidb` 为所有需要写的key选出一个作为`primary`,其余的作为`secondary`)，将实际数据存入 `rocksdb`。其中每个key的处理过程如下，中间出现失败，则整个`prewrite`失败：
+Prewrite 是事务两阶段提交的第一步，其从`pd`获取代表当前物理时间的全局唯一时间戳作为当前事务的 `start_ts`，尝试对所有被写的元素加锁(为应对客户端故障，`tidb` 为所有需要写的 key 选出一个作为 `primary`,其余的作为`secondary`)，将实际数据存入 `rocksdb`。其中每个key的处理过程如下，中间出现失败，则整个`prewrite`失败：
 
 1. 检查 `write-write` 冲突：从 `rocksdb` 的`write` 列中获取当前 `key` 的最新数据，若其 `commit_ts` 大于等于`start_ts`,说明存在更新版本的已提交事务，向 `tidb` 返回 `WriteConflict` 错误，结束。
 2. 检查 `key` 是否已被锁上，如果 `key` 的锁已存在，收集 `KeyIsLock` 的错误，处理下一个 `key`
-5. 往内存中的 `lock` 列写入 `lock(start_ts,key)` 为当前key加锁,若当前key被选为 `primary`, 则标记为 `primary`,若为`secondary`,则标明指向`primary`的信息。
+5. 往内存中的 `lock` 列写入 `lock(start_ts,key)` 为当前 key 加锁,若当前 key 被选为 `primary`, 则标记为 `primary`,若为 `secondary`,则标明指向 `primary` 的信息。
 6. 若当前 `value` 较小，则与 `lock` 存在一起，否则，内存中存入 `default(start_ts,key,value)`。
 
 处理完所有数据后，若存在 `KeyIsLock` 错误，则向 `tidb` 返回所有 `KeyIsLocked` 信息。
