@@ -25,9 +25,9 @@ comments: true
 
 # 扩容过程中 PD 生成调度的原理及常见问题
 
-因为本身 PD 就有一系列监控和平衡各个 TiKV 之间的资源使用情况的调度器，因此 PD 没有针对扩容给出单独的调度器。这类调度器主要有两类：
-- `Balance-region-scheduler`：负责将 Region 均匀的分散在集群中所有的 store 上，分散存储压力
-- `Balance-leader-scheduler`: 负责将 region leader 均匀分布在 store 上，主要负责分散客户端的请求压力（CPU ）
+因为本身 PD 就有一系列监控和平衡各个 TiKV 之间的资源使用情况的调度器，因此 PD 没有针对扩容给出单独的调度器。目前这类调度器主要有两类：
+- `Balance-region-scheduler`：负责将 Region 均匀的分散在集群中所有的 store 上，主要用于分散存储压力
+- `Balance-leader-scheduler`: 负责将 region leader 均匀分布在 store 上，主要负责分散客户端的请求压力（CPU）
 
 因此我们也可以认为，在扩容过程中，负责生成调度的主要是以上两个调度器在发挥作用。
 对于 `balance-leader-scheduler`, 因为没有数据搬迁，只是 `raft-group` 元数据的变更，因此特别快。一般情况下，我们不需要特别关注这个（也很少出问题）
@@ -78,10 +78,10 @@ Balance-region-scheduler 每隔 10ms~5s/10s 会发起一次调度。 `balance-re
 
 - 编辑 balance-region-scheduler
 ``` 
-remove balance-region-scheduler
+// remove balance-region-scheduler
 ~$ tiup ctl:v7.5.2 pd schedule remove balance-region-scheduler
 Starting component ctl: /home/tidb/.tiup/components/ctl/v7.5.2/ctl pd schedule remove balance-region-scheduler Success!
-add balance-region-scheduler
+// add balance-region-scheduler
 ~$ tiup ctl:v7.5.2 pd schedule add balance-region-scheduler
 Starting component ctl: /home/tidb/.tiup/components/ctl/v7.5.2/ctl pd schedule add balance-region-scheduler Success! The scheduler is created."
 ```
@@ -142,9 +142,10 @@ Success!
 
 在扩容场景下，这类 store 往往是新扩容的节点，因此这些新节点很容易变成热点，相关配置也比较容易到达使用瓶颈。
 这里相关配置主要是以下三个：
- - store limit add-peer : speed limit for the special store
- - max-snapshot-count : when the number of snapshots that a single store receives or sends meet the limit, it will never be chosen as a source or target store
- - max-pending-peer-count: control the maximum number of pending peers in a single store.  
+  - [store limit add-peer](https://docs.pingcap.com/tidb/stable/configure-store-limit#principles-of-store-limit-v2) : speed limit for the special store
+  - [max-snapshot-count](https://docs.pingcap.com/tidb/stable/pd-configuration-file#max-snapshot-count) : when the number of snapshots that a single store receives or sends meet the limit, it will never be chosen as a source or target store
+  - [max-pending-peer-count](https://docs.pingcap.com/tidb/stable/pd-configuration-file#max-pending-peer-count): control the maximum number of pending peers in a single store.  
+
 
 - Metrics 中查看配置项(同 source store 配置项查看)：pd->cluster->pd scheduler config/store limit
 - 查看目标节点配置项是否遇到瓶颈：pd->schedule -> filter target -> balance-regionXXX-{config}-filter
@@ -153,7 +154,7 @@ Success!
 
 <img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/tidb_scale/create_operator_speed.png?raw=true" width="600" />
 
-经过以上步骤，一个 balance region 的 operator 变生成了。我们可以通过 pd->operator->schedule operator create -> balance region 查看当前 operator 的产生速度：
+经过以上步骤，一个 balance region 的 operator 变生成了。我们可以通过 pd->operator->schedule operator create -> balance region 查看当前 operator 的产生速度.
 
 ## Summary 
 
