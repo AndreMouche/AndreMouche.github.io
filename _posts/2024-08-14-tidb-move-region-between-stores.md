@@ -8,6 +8,21 @@ tags: ["tidb","tikv"]
 comments: true
 ---
 
+
+作为一个分布式数据库，扩缩容是 TiDB 集群最常见的运维操作之一。本系列文章，我们将基于 v7.5.0 具体介绍扩缩容操作的具体原理、相关配置及常见问题的排查。
+说到扩缩容，从集群视角考虑，主要需要考虑的是扩缩容完成后，集群数据通过调度，重新让所有在线的 tikv 的资源使用到达一个平衡的状态。
+因此对于扩缩容来说，我们主要关心的还是以下两点：
+- 调度产生原理
+- 调度执行原理
+
+本系列文章我们将继续围绕以上两个逻辑，重点介绍扩缩容过程中的核心模块及常见问题，分为以下几个部分：
+- [TiDB 扩容原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-in-and-out.html)
+- [扩容过程中调度生成原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-out-pd.html)
+- [缩容过程中调度生成原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-in.html)
+- [扩缩容过程调度执行（TiKV 副本搬迁）的原理及常见问题](https://andremouche.github.io/tidb/tidb-move-region-between-stores.html)
+
+本文我们重点介绍扩缩容过程中，TiKV 侧调度消费的原理及常见问题。对于任何需要在 TiKV 间搬迁数据的调度消费原理，都可以参考本文。
+
 # TiKV 副本搬迁原理及常见问题
 
 TiKV 之间的副本搬迁一般出现在：
@@ -15,6 +30,7 @@ TiKV 之间的副本搬迁一般出现在：
 - 扩容新节点，需要将数据在新老 tikv 节点做 balance, 老节点上的数据会往新节点搬迁。在 tikv 数量 VS 新节点数量比较大的情况下，新节点的写入压力最可能成为瓶颈
 - 下线节点，下线过程中需要将下线 kv 上的数据搬迁到现有 tikv 中
 - 热点调度及正常的 balance-region 调度等
+- Placement-rule 突然发生变更（副本规则发生变更）
 
 副本搬迁的完整步骤在[第一章]()已经介绍过，下面我们重点介绍一下副本搬迁的 add learner 和 remove learner 操作。
 

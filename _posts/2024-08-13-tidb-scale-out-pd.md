@@ -8,6 +8,22 @@ tags: ["tidb","tikv","pd"]
 comments: true
 ---
 
+
+作为一个分布式数据库，扩缩容是 TiDB 集群最常见的运维操作之一。本系列文章，我们将基于 v7.5.0 具体介绍扩缩容操作的具体原理、相关配置及常见问题的排查。
+说到扩缩容，从集群视角考虑，主要需要考虑的是扩缩容完成后，集群数据通过调度，重新让所有在线的 tikv 的资源使用到达一个平衡的状态。
+因此对于扩缩容来说，我们主要关心的还是以下两点：
+- 调度产生原理
+- 调度执行原理
+
+本系列文章我们将继续围绕以上两个逻辑，重点介绍扩缩容过程中的核心模块及常见问题，分为以下几个部分：
+- [TiDB 扩容原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-in-and-out.html)
+- [扩容过程中调度生成原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-out-pd.html)
+- [缩容过程中调度生成原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-in.html)
+- [扩缩容过程调度执行（TiKV 副本搬迁）的原理及常见问题](https://andremouche.github.io/tidb/tidb-move-region-between-stores.html)
+
+本文我们重点介绍 TiDB 扩容过程中 PD 生成调度的原理和常见问题，对于扩容过程中调度消费的原理及常见问题，可以看[这篇](https://andremouche.github.io/tidb/tidb-move-region-between-stores.html)文章。
+
+
 # 扩容过程中 PD 生成调度的原理及常见问题
 
 因为本身 PD 就有一系列监控和平衡各个 TiKV 之间的资源使用情况的调度器，因此 PD 没有针对扩容给出单独的调度器。这类调度器主要有两类：

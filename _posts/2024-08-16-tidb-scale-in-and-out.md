@@ -11,14 +11,14 @@ comments: true
 
 作为一个分布式数据库，扩缩容是 TiDB 集群最常见的运维操作之一。本系列文章，我们将基于 v7.5.0 具体介绍扩缩容操作的具体原理、相关配置及常见问题的排查。
 说到扩缩容，从集群视角考虑，主要需要考虑的是扩缩容完成后，集群数据通过调度，重新让所有在线的 tikv 的资源使用到达一个平衡的状态。
-本文将以扩容为例子，介绍扩容过程中主要涉及的资源两部分内容：
+本文作为本系列文章第一篇，将以扩容为例子，介绍扩容过程中主要涉及的资源两部分内容：
 - 调度产生原理
 - 调度执行原理
 
 本文之后，我们将继续围绕以上两个模块，重点介绍扩缩容过程中的核心模块及常见问题，分为以下几个部分：
-- [扩容过程中调度生成原理及常见问题]()
-- [缩容过程中调度生成原理及常见问题]()
-- [扩缩容过程调度执行（TiKV 副本搬迁）的原理及常见问题]()
+- [扩容过程中调度生成原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-out-pd.html)
+- [缩容过程中调度生成原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-in.html)
+- [扩缩容过程调度执行（TiKV 副本搬迁）的原理及常见问题](https://andremouche.github.io/tidb/tidb-move-region-between-stores.html)
 
 # 扩容 TiKV 原理及常见问题
 
@@ -129,6 +129,6 @@ store-4 上的 learner 节点虽然有完整的数据，但不参与投票过程
 - 调度计划执行的速度，其中最主要的还是 TiKV 侧副本数据的搬迁
 
 因此接下来，重点介绍扩缩容过程中的核心模块及常见问题，分为以下几个部分：
-- [扩容过程中调度生成原理及常见问题]()
-- [缩容过程中调度生成原理及常见问题]()
-- [扩缩容过程调度执行（TiKV 副本搬迁）的原理及常见问题]()
+- [扩容过程中调度生成原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-out-pd.html)
+- [缩容过程中调度生成原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-in.html)
+- [扩缩容过程调度执行（TiKV 副本搬迁）的原理及常见问题](https://andremouche.github.io/tidb/tidb-move-region-between-stores.html)
