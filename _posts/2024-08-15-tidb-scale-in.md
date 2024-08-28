@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "TiDB 缩容原理及常见问题"
+title: "TiDB 缩容过程中调度生成原理及常见问题"
 keywords: ["tidb"]
-description: "TiDB 缩容原理及常见问题"
+description: "TiDB 缩容过程中调度生成原理及常见问题"
 category: "tidb"
 tags: ["tidb","tikv","pd"]
 comments: true
@@ -10,16 +10,19 @@ comments: true
 
 
 
-作为一个分布式数据库，扩缩容是 TiDB 集群最常见的运维操作之一。本系列文章，我们将基于 v7.5.0 具体介绍扩缩容操作的具体原理、相关配置及常见问题。
-扩缩容从集群视角考虑，主要需要考虑的是扩缩容完成后，集群数据通过调度，让所有在线 tikv 的资源使用到达一个均衡的状态。在这个过程中，主要涉及以下两个关键步骤：
-- 调度产生速度
-- 调度执行速度
+作为一个分布式数据库，扩缩容是 TiDB 集群最常见的运维操作之一。本文，我们将基于 v7.5.0 具体介绍扩缩容操作的具体原理、相关配置及常见问题的排查。
+通常，我们根据当前资源状态来决定是否需要调整 TiKV 节点的规模，无论是增加还是减少节点。我们希望在调整后，集群能够通过重新调度尽快实现所有在线 TiKV 节点资源的平衡利用。
+因此对于扩缩容来说，我们主要关心的还是以下两点：
+- 资源均衡调度指令产生速度(PD 上调度产生的速度 )
+- 资源均衡调度指令执行速度(TiKV 间数据搬迁的速度)
 
-本系列文章我们将围绕以上两个逻辑，重点介绍扩缩容过程中的核心模块及常见问题，分为以下几个部分：
-- [TiDB 扩容原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-in-and-out.html)
-- [扩容过程中调度生成原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-out-pd.html)
-- [缩容过程中调度生成原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-in.html)
+本系列文章将围绕以上两个逻辑，重点介绍扩缩容过程中的核心模块及常见问题，分为以下几个部分：
+
+- 扩缩容调度生成原理及常见问题：
+  - [扩容过程中调度生成原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-out-pd.html)
+  - [缩容过程中调度生成原理及常见问题](https://andremouche.github.io/tidb/tidb-scale-in.html)
 - [扩缩容过程调度执行（TiKV 副本搬迁）的原理及常见问题](https://andremouche.github.io/tidb/tidb-move-region-between-stores.html)
+
 
 本文我们重点介绍 TiDB 缩容原理及常见问题，将侧重于从 PD 视角介绍，也就是调度的生成原理部分，对于缩容过程中调度消费的原理及常见问题，可以看[这篇](https://andremouche.github.io/tidb/tidb-move-region-between-stores.html)文章。
 
