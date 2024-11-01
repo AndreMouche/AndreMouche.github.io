@@ -125,3 +125,126 @@ With the above metrics, we can quickly find out the reason why the `merge-region
 - split-keys-after-merge : similiar as above, only the unit becomes keys. That is, after merging, it will soon reach the split condition and will be split again.
 - Larger-source : The size or number of keys in the source region is greater than the merged region, just mark it, and this operator will still be generated.
 
+### key configrations in PD related to merge-region
+
+- [max-merge-region-size](https://docs.pingcap.com/tidb/v7.5/pd-configuration-file#max-merge-region-size)(20M by default):Controls the size limit of Region Merge. When the Region size is greater than the specified value, PD does not merge the Region with the adjacent Regions..
+- [max-merge-region-keys](https://docs.pingcap.com/tidb/v7.5/pd-configuration-file#max-merge-region-keys)(20 million by default):Specifies the upper limit of the Region Merge key. When the Region key is greater than the specified value, the PD does not merge the Region with its adjacent Regions.
+- [split-merge-interval](https://docs.pingcap.com/tidb/v7.5/pd-configuration-file#split-merge-interval)(1h by default): Controls the time interval between the split and merge operations on the same Region. That means a newly split Region will not be merged for a while.
+- [merge-schedule-limit](https://docs.pingcap.com/tidb/v7.5/pd-configuration-file#merge-schedule-limit)(8 by default):The number of the Region Merge scheduling tasks performed at the same time. Set this parameter to 0 to disable Region Merge.
+- [enable-cross-table-merge](https://docs.pingcap.com/tidb/v7.5/pd-configuration-file#enable-cross-table-merge)(true by default):Determines whether to enable the merging of cross-table Regions
+
+## Speed up merge-region operator's consumption 
+
+Talking about the consumption speed of `merge-region`, first we need to know is how a `region-merge` operator is done.
+
+Region itself is a logical concept. As the smallest logical unit of TiKV storage, the data replica behind it is physically stored on TiKV. Therefore, when doing region merge, we first adjust the topology structure of the data replicas and roles of the two regions to be merged to be completely consistent, and then we can safely and quickly merge them logically.
+
+Below, we will take region-2 [B, C) and region-3 [C, D) merged into region-2 [B, D) as an example to briefly show the process of the region-merge operator.
+
+In initialization state:
+
+- The data range of Region-2 is [B, C), and the three replicas for this region-2 are on store-1, store-2, and store-3, with the leader on store-2
+- The data range of Region-3 is [C, D), with three replicas located in store-1, store-2, and store-4, with the leader located in store-4.
+
+<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/tidb_merge_region/merge-region-1.png?raw=true" width="600" />
+
+To merge region-2 and region-3, first we need to move the data replicas of the two regions to the same store. Assuming at this stage, we will move the replica of region-2 from store-3 to store-4.
+
+<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/tidb_merge_region/merge-region-2.png?raw=true" width="600" />
+
+
+Now, the two regions each have 1 replica on store-1, store-2, and store-4. However, to merge them, we also need the replica's role distribution topology of these two regions to be completely consistent. Therefore, here we transfer the leader of region-2 to the node store-4 where the leader of region-3 is located.
+
+<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/tidb_merge_region/merge-region-3.png?raw=true" width="600" />
+
+
+Now that the replica role topologies of region-2 and region-3 are completely consistent, we can safely complete the logical merge.
+
+<img src="https://github.com/AndreMouche/AndreMouche.github.io/blob/master/images/tidb_merge_region/merge-region-4.png?raw=true" width="600" />
+
+
+From the above execution principle of `merge-region`, we can easily understand that for `merge-region`, the corresponding region's data replica needs to be relocated to the same store during the merge process. Therefore, the configuration related to TiKV replica relocation will affect the speed of `merge-regio`n execution. The most resource-consuming and also the easiest to become a bottleneck is the data relocation that named `add-learner`. You can check more details in  [Deep dive into data relocation between tikv](https://andremouche.github.io/tidb/tidb-move-region-between-stores.html) . And the key configurations in this step are:
+
+- [snap-generator-pool-size](https://docs.pingcap.com/tidb/v7.5/tikv-configuration-file#snap-generator-pool-size-new-in-v540) (default 2), used by `snap-generator`
+-  [snap-io-max-bytes-per-sec](https://docs.pingcap.com/tidb/v7.5/tikv-configuration-file#snap-io-max-bytes-per-sec) (100MB by default),used by `snap-generator`
+- [concurrent-send-snap-limit](https://docs.pingcap.com/tidb/v7.5/tikv-configuration-file#concurrent-send-snap-limit)(32 by default) used by `snap_handler`.`snap_sender`
+- [concurrent-recv-snap-limit](https://docs.pingcap.com/tidb/v7.5/tikv-configuration-file#concurrent-recv-snap-limit) (32 by default) used by `snap_handler`.`snap_sender` 
+
+
+## Check the progress of a specific region-merge through PD logs
+
+Log example:
+
+You can refer to this log when a specific merge-region operator gets stuck
+
+```
+// create a merge-region operator: merge: region 512607784 to 513499180 
+/** steps:
+add learner peer 612422577 on store 16910359, 
+promote learner peer 612422577 on store 16910359 to voter, 
+remove peer on store 16910361, 
+add learner peer 612422578 on store 266988190, 
+promote learner peer 612422578 on store 266988190 to voter, 
+remove peer on store 266988760, 
+add learner peer 612422579 on store 536155773, 
+promote learner peer 612422579 on store 536155773 to voter, 
+transfer leader from store 536156435 to store 8, 
+remove peer on store 536156435, 
+add learner peer 612422580 on store 142072119, 
+promote learner peer 612422580 on store 142072119 to voter, 
+remove peer on store 536156437, 
+add learner peer 612422576 on store 266988192, 
+promote learner peer 612422576 on store 266988192 to voter, 
+transfer leader from store 8 to store 16910359, 
+remove peer on store 8, merge region 512607784 into region 513499180])\
+**/
+// The merge operator is always created in pairs on two regions that need to be merged.
+[2024/07/22 20:02:58.803 +08:00] [INFO] [operator_controller.go:424] ["add operator"] [region-id=512607784] [operator="\"merge-region {merge: region 512607784 to 513499180} (kind:leader,region,merge, region:512607784(244793,40956), createAt:2024-07-22 20:02:58.803075332 +0800 CST m=+27423622.512140371, startAt:0001-01-01 00:00:00 +0000 UTC, currentStep:0, steps:[add learner peer 612422577 on store 16910359, promote learner peer 612422577 on store 16910359 to voter, remove peer on store 16910361, add learner peer 612422578 on store 266988190, promote learner peer 612422578 on store 266988190 to voter, remove peer on store 266988760, add learner peer 612422579 on store 536155773, promote learner peer 612422579 on store 536155773 to voter, transfer leader from store 536156435 to store 8, remove peer on store 536156435, add learner peer 612422580 on store 142072119, promote learner peer 612422580 on store 142072119 to voter, remove peer on store 536156437, add learner peer 612422576 on store 266988192, promote learner peer 612422576 on store 266988192 to voter, transfer leader from store 8 to store 16910359, remove peer on store 8, merge region 512607784 into region 513499180])\""] ["additional info"=]
+[2024/07/22 20:02:58.803 +08:00] [INFO] [operator_controller.go:424] ["add operator"] [region-id=513499180] [operator="\"merge-region {merge: region 512607784 to 513499180} (kind:leader,region,merge, region:513499180(244859,40965), createAt:2024-07-22 20:02:58.803076494 +0800 CST m=+27423622.512141533, startAt:0001-01-01 00:00:00 +0000 UTC, currentStep:0, steps:[merge region 512607784 into region 513499180])\""] ["additional info"=]
+[2024/07/22 20:02:58.804 +08:00] [INFO] [operator_controller.go:620] ["send schedule command"] [region-id=513499180] [step="merge region 512607784 into region 513499180"] [source=create]
+[2024/07/22 20:03:04.264 +08:00] [INFO] [operator_controller.go:620] ["send schedule command"] [region-id=513499180] [step="merge region 512607784 into region 513499180"] [source="active push"]
+[2024/07/22 20:03:09.267 +08:00] [INFO] [operator_controller.go:620] ["send schedule command"] [region-id=513499180] [step="merge region 512607784 into region 513499180"] [source="active push"]
+[2024/07/22 20:03:14.764 +08:00] [INFO] [operator_controller.go:620] ["send schedule command"] [region-id=513499180] [step="merge region 512607784 into region 513499180"] [source="active push"]
+[2024/07/22 20:03:16.293 +08:00] [INFO] [operator_controller.go:620] ["send schedule command"] [region-id=512607784] [step="merge region 512607784 into region 513499180"] [source=heartbeat]
+[2024/07/22 20:03:16.388 +08:00] [INFO] [cluster.go:545] ["region Version changed"] [region-id=513499180] [detail="StartKey Changed:{7480000000000827FF7C5F7280000000C6FF7CFD9E0000000000FA} -> {7480000000000827FF7C5F7280000000C5FF5284990000000000FA}, EndKey:{7480000000000827FF7C5F7280000000C7FF8376770000000000FA}"] [old-version=244859] [new-version=244860]
+[2024/07/22 20:03:16.407 +08:00] [INFO] [operator_controller.go:537] ["operator finish"] [region-id=513499180] [takes=17.603823476s] [operator="\"merge-region {merge: region 512607784 to 513499180} (kind:leader,region,merge, region:513499180(244859,40965), createAt:2024-07-22 20:02:58.803076494 +0800 CST m=+27423622.512141533, startAt:2024-07-22 20:02:58.803993629 +0800 CST m=+27423622.513058670, currentStep:1, steps:[merge region 512607784 into region 513499180]) finished\""] ["additional info"=]
+
+// in expection, since the region 512607784 has been merged into 513499180, so the operator on it does not need to be processed anymore, this operator will be cleaned up.
+[2024/07/22 20:03:19.768 +08:00] [WARN] [operator_controller.go:211] ["remove operator because region disappeared"] [region-id=512607784] [operator="merge-region {merge: region 512607784 to 513499180} (kind:leader,region,merge, region:512607784(244793,40956), createAt:2024-07-22 20:02:58.803075332 +0800 CST m=+27423622.512140371, startAt:2024-07-22 20:02:58.803798029 +0800 CST m=+27423622.512863076, currentStep:17, steps:[add learner peer 612422577 on store 16910359, promote learner peer 612422577 on store 16910359 to voter, remove peer on store 16910361, add learner peer 612422578 on store 266988190, promote learner peer 612422578 on store 266988190 to voter, remove peer on store 266988760, add learner peer 612422579 on store 536155773, promote learner peer 612422579 on store 536155773 to voter, transfer leader from store 536156435 to store 8, remove peer on store 536156435, add learner peer 612422580 on store 142072119, promote learner peer 612422580 on store 142072119 to voter, remove peer on store 536156437, add learner peer 612422576 on store 266988192, promote learner peer 612422576 on store 266988192 to voter, transfer leader from store 8 to store 16910359, remove peer on store 8, merge region 512607784 into region 513499180])"]
+
+[2024/07/22 20:03:19.768 +08:00] [INFO] [operator_controller.go:572] ["operator canceled"] [region-id=512607784] [takes=20.964336678s] [operator="\"merge-region {merge: region 512607784 to 513499180} (kind:leader,region,merge, region:512607784(244793,40956), createAt:2024-07-22 20:02:58.803075332 +0800 CST m=+27423622.512140371, startAt:2024-07-22 20:02:58.803798029 +0800 CST m=+27423622.512863076, currentStep:17, steps:[add learner peer 612422577 on store 16910359, promote learner peer 612422577 on store 16910359 to voter, remove peer on store 16910361, add learner peer 612422578 on store 266988190, promote learner peer 612422578 on store 266988190 to voter, remove peer on store 266988760, add learner peer 612422579 on store 536155773, promote learner peer 612422579 on store 536155773 to voter, transfer leader from store 536156435 to store 8, remove peer on store 536156435, add learner peer 612422580 on store 142072119, promote learner peer 612422580 on store 142072119 to voter, remove peer on store 536156437, add learner peer 612422576 on store 266988192, promote learner peer 612422576 on store 266988192 to voter, transfer leader from store 8 to store 16910359, remove peer on store 8, merge region 512607784 into region 513499180])\""]
+```
+
+# Recent optimization(PRs) for `merge-region` on TiKV side
+
+- Significant improvement in replica migration performance for small regions such as empty regiontikv [#17408](https://github.com/tikv/tikv/pull/17408)
+
+  - For small region data transfer, for regions smaller than `snap_min_ingest_size` (default 2MB), the original ingest method will be changed to write directly to rocksdb. For merge-region situations with empty regions (< 1M), there will be significant performance improvement
+
+- The problem of region-worker getting stuck due to `delete-range` and `generate-snapshot` tasks during data transfer has also been effectively alleviated in tikv [#12587](https://github.com/tikv/tikv/issues/12587) .
+
+
+# Common incident and workaround
+
+## Empty regions cannot be merged: Different Placement-rules cause adjacent regions to not be merged (as expected).
+
+- Phenomenon: When the user has enabled the [`enable-cross-table-merge`](https://github.com/tikv/tikv/issues/12587) , multiple placement rules are set, such as table-1, table-2, and table-3 have different placement-rules.
+  - Table 1 is required to be placed in Beijing and Shanghai
+  - Table 2 requires to be placed in Hangzhou, Shandong
+  - Table 3 requires placement in Beijing and Shanghai
+
+Among them, the table-id of table 1\ table 2\ table3 is continuous, that is, the data area is continuous, that is, the data range of the region where they are located is continuous
+
+At this time, if table-2 is dropped and an empty region is generated, this empty region cannot be merged with the region of table-1 or table-3, and this time the empty region cannot be merged.
+
+- Workaround: Set the placement-rule of table2 to be the same as table-1 or table-3.
+
+## Merge region related memory leaks
+
+- Phenomenon: A large number of merge-region operations may cause memory leaks in statistical information, resulting in a continuous increase in PD memory
+  - The merged region's delayed heartbeat may cause the information of the current region to remain in the PD memory forever [pd#8710](https://github.com/tikv/pd/issues/8710) [pd#8700](https://github.com/tikv/pd/issues/8700)
+  - The merged region cannot clear the cache left in the hot-region because it will no longer send heartbeats [pd#8698](https://github.com/tikv/pd/issues/8698)
+
+- workaround：
+  - Periodic restart PD
+  - Upgrade to a fixed version
